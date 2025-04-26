@@ -66,12 +66,12 @@ header {
 main {
     padding: 40px;
     margin: 0 auto;
-    margin-top: 20px;
+    /*margin-top: 20px;*/
     max-width: 1000px;  /* Narrower content */
     flex-grow: 1; /* Allow content to grow and push footer down */
 }
 
-.intro h1 {
+h1 {
     font-size: 2.5rem;
     margin-bottom: 20px;
 }
@@ -84,11 +84,11 @@ main {
 }
 
 /* Featured Posts Section */
-.featured {
+section {
     margin-top: 40px;
 }
 
-.featured h2 {
+h2 {
     font-size: 2rem;
     margin-bottom: 20px;
 }
@@ -144,6 +144,35 @@ main {
 
 .read-more:hover {
     text-decoration: underline;
+}
+
+/* Blog Directory */
+.blog-directory ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.blog-directory li {
+    margin-bottom: 20px;
+}
+
+.blog-directory li a {
+    font-size: 1.2rem;
+    color: #1E2A47;
+    text-decoration: none;
+}
+
+.blog-directory li a:hover {
+    text-decoration: underline;
+}
+
+.blog-directory li span {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.blog-directory li p {
+    color: #555;
 }
 
 
