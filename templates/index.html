@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to My Personal Website{% endblock %}
+
+{% block content %}
+    <section class="intro">
+        <h1>Welcome to My Personal Website</h1>
+        <p>This site features my blog, interactive data apps, and a digital resume.</p>
+        <p>Explore my work, projects, and insights on Data Science and AI!</p>
+    </section>
+
+    <section class="featured">
+        <h2>Featured Posts</h2>
+        <div class="post">
+            <h3><a href="/blog/post1">Understanding AI and Ethics</a></h3>
+            <p>Exploring the ethical implications of AI technologies and their impact on society.</p>
+        </div>
+        <div class="post">
+            <h3><a href="/blog/post2">Machine Learning in Action</a></h3>
+            <p>A hands-on guide to implementing machine learning models in real-world scenarios.</p>
+        </div>
+    </section>
+
+    <section class="about">
+        <h2>About Me</h2>
+        <p>I’m Kyle Neary, a Data Scientist and former Astrophysicist passionate about AI, data science, and technology. I’ve worked across various industries, including finance, retail, and hospitality. Feel free to explore my blog and projects!</p>
+    </section>
+{% endblock %}

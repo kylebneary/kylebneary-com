@@ -1,0 +1,52 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.idea/
+.vscode/
+
+# Flask specific
+instance/
+.webassets-cache
+
+# Pytest
+.cache
+
+# Coverage reports
+*.cover
+*.coverage
+*.hypothesis/
+.coverage.*
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
