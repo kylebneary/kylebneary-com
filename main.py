@@ -8,8 +8,9 @@ from projects.projects import projects_bp
 app = Flask(__name__)
 
 app.register_blueprint(home_bp)
-#app.register_blueprint(about_bp, url_prefix='/about-me')
-#app.register_blueprint(blog_bp, url_prefix='/blog')
+app.register_blueprint(about_bp, url_prefix='/about-me')
+app.register_blueprint(blog_bp, url_prefix='/blog')
+app.register_blueprint(projects_bp, url_prefix='/projects')
 
 
 if __name__ == '__main__':
