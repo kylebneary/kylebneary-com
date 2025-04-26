@@ -14,8 +14,8 @@
         <nav>
             <ul class="nav">
                 <li><a href="{{ url_for('home_bp.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-                <li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>
-                <li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>
+                <!--<li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>-->
+                <!--<li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>-->
                 <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/about-me') %}active{% endif %}">About Me</a></li>
             </ul>
         </nav>
@@ -31,11 +31,12 @@
         <p>&copy; 2025 Kyle Neary</p>
         <span>|</span>
         <div class="social-icons">
-            <a href="https://twitter.com/yourhandle" target="_blank" class="fab fa-twitter"></a>
-            <a href="https://linkedin.com/in/yourhandle" target="_blank" class="fab fa-linkedin"></a>
-            <a href="https://github.com/yourhandle" target="_blank" class="fab fa-github"></a>
-            <a href="https://instagram.com/yourhandle" target="_blank" class="fab fa-instagram"></a>
+            <!--<a href="https://twitter.com/yourhandle" target="_blank" class="fab fa-twitter"></a>-->
+            <a href="https://linkedin.com/in/kylebneary" target="_blank" class="fab fa-linkedin"></a>
+            <!--<a href="https://github.com/yourhandle" target="_blank" class="fab fa-github"></a>-->
+            <!--<a href="https://instagram.com/yourhandle" target="_blank" class="fab fa-instagram"></a>-->
         </div>
     </footer>
+    <script src="{{ url_for('static', filename='js/shift_down.js') }}"></script>
 </body>
 </html>
