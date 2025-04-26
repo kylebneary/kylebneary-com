@@ -66,6 +66,7 @@ header {
 main {
     padding: 40px;
     margin: 0 auto;
+    margin-top: 20px;
     max-width: 1000px;  /* Narrower content */
     flex-grow: 1; /* Allow content to grow and push footer down */
 }
