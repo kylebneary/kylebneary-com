@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Personal Website{% endblock %}</title>
+    <title>{% block title %}{% endblock %} | Kyle B. Neary</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Font Awesome for social icons -->
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
                 <li><a href="{{ url_for('home_bp.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
                 <li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>
                 <li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>
-                <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/resume') %}active{% endif %}">About Me</a></li>
+                <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/about-me') %}active{% endif %}">About Me</a></li>
             </ul>
         </nav>
     </header>
