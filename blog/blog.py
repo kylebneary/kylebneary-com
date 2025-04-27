@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, render_template
+import markdown
 
 blog_bp = Blueprint('blog_bp', __name__,
     template_folder='templates')
@@ -54,3 +55,12 @@ def index():
     featured_posts = get_featured_posts()
     all_posts = get_all_posts()
     return render_template('blog/index.html', featured_posts=featured_posts, all_posts=all_posts)
+
+@blog_bp.route('/<post_name>')
+def post(post_name):
+    # Find the related file
+    filename = post_name.replace('-', '_') + '.md'
+    with open(f'blog/posts/{filename}', 'r') as i:
+        text = i.read()
+        post_content = markdown.markdown(text)
+    return render_template('blog/post.html', post_content=post_content)
