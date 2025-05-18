@@ -13,21 +13,13 @@
     <section class="featured">
         <h2>Featured Posts</h2>
         <div class="featured-posts">
-            <div class="card">
-                <h3><a href="/blog/article1">Understanding AI and Ethics</a></h3>
-                <p>Exploring the ethical implications of AI technologies and their impact on society.</p>
-                <a href="/blog/article1" class="read-more">Read More</a>
-            </div>
-            <div class="card">
-                <h3><a href="/blog/article2">Machine Learning in Action</a></h3>
-                <p>A hands-on guide to implementing machine learning models in real-world scenarios.</p>
-                <a href="/blog/article2" class="read-more">Read More</a>
-            </div>
-            <div class="card">
-                <h3><a href="/blog/article3">The Future of AI</a></h3>
-                <p>Discussing where AI technology is headed and the future implications for industries.</p>
-                <a href="/blog/article3" class="read-more">Read More</a>
-            </div>
+            {% for post in featured_posts %}
+                <div class="card">
+                    <h3><a href="{{ post.url }}">{{ post.name }}</a></h3>
+                    <p>{{ post.summary }}</p>
+                    <a href="{{ post.url }}" class="read-more">Read More</a>
+                </div>
+            {% endfor %}
         </div>
     </section>
 
