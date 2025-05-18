@@ -1,3 +1,10 @@
+---
+title: The Rise of Quantum Computing
+author: ChatGPT
+summary: How quantum computing is changing the landscape of data processing
+publication_date: 2025-04-24
+---
+
 # The Rise of Quantum Computing #
 
 Quantum computing is often discussed as the next frontier in computing, but what exactly is it, and how will it revolutionize industries like data science, cryptography, and artificial intelligence?

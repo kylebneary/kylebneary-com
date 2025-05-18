@@ -1,3 +1,10 @@
+---
+title: The Future of AI
+author: ChatGPT
+summary: Discussing where AI technology is headed and the future implications for industries
+publication_date: 2025-04-23
+---
+
 # The Future of AI #
 
 Artificial Intelligence is already making waves across industries, but the next few decades promise even more profound changes. As AI continues to advance, we will see it integrated into every aspect of our lives, revolutionizing industries in ways we are only beginning to understand.

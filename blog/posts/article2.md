@@ -1,3 +1,10 @@
+---
+title: Machine Learning in Action
+author: ChatGPT
+summary: A hands-on guide to implementing machine learning models in real-world scenarios
+publication_date: 2025-04-22
+---
+
 # Machine Learning in Action #
 
 Machine learning (ML) is not just a buzzword, it's a powerful tool that's being used to solve real-world problems. Whether you're building predictive models for business, creating recommendation engines, or developing autonomous systems, the ability to apply machine learning effectively is crucial.

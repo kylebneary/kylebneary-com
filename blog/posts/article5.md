@@ -1,3 +1,10 @@
+---
+title: AI and Job Automation
+author: ChatGPT
+summary: Examining the impact of AI on various job sectors and future job opportunities
+publication_date: 2025-04-25
+---
+
 # AI and Job Automation #
 
 The rise of artificial intelligence (AI) is often associated with the fear of job automation, where machines and algorithms replace human workers. While automation has already transformed industries like manufacturing, AI is now extending its reach into sectors like healthcare, finance, and customer service. But what does this mean for the future of work?
