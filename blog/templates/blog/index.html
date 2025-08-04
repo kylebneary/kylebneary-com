@@ -14,9 +14,9 @@
         <div class="featured-posts">
             {% for post in featured_posts %}
                 <div class="card">
-                    <h3><a href="{{ post.link }}">{{ post.title }}</a></h3>
+                    <h3><a href="{{ post.url }}">{{ post.name }}</a></h3>
                     <p>{{ post.summary }}</p>
-                    <a href="{{ post.link }}" class="read-more">Read More</a>
+                    <a href="{{ post.url }}" class="read-more">Read More</a>
                 </div>
             {% endfor %}
         </div>
@@ -28,8 +28,8 @@
         <ul>
             {% for post in all_posts %}
                 <li>
-                    <a href="{{ post.link }}">{{ post.title }}</a> - 
-                    <span>{{ post.date.strftime('%B %d, %Y') }}</span>
+                    <a href="{{ post.url }}">{{ post.name }}</a> - 
+                    <span>{{ post.publication_date }}</span>
                     <p>{{ post.summary }}</p>
                 </li>
             {% endfor %}
