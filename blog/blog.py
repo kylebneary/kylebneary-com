@@ -82,4 +82,5 @@ def post(post_name):
     post_content = rewrite_img_src(post_content)
     
     title = md.Meta.get('title', [post_name])[0] if hasattr(md, "Meta") else post_name
-    return render_template('blog/post.html', title=title, post_content=post_content)
+    return render_template('blog/post.html', title=title, post_content=post_content,
+                           meta=getattr(md, "Meta", {}))
