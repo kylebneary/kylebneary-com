@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Blog{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-    {{ post_content|safe }}
+    <article class="blog">
+        <!-- {% if meta.publication_date %}<div class="post-meta">{{ meta.publication_date[0] }}</div>{% endif %} -->
+        {{ post_content|safe }}
+    </article>
 {% endblock %}
