@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Blog{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
     {{ post_content|safe }}

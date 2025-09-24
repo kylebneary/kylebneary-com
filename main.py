@@ -20,7 +20,8 @@ def index():
     print('Request for home page received')
     _, featured_posts = get_blog_posts()
     print(featured_posts)
-    return render_template('index.html', featured_posts=featured_posts)
+    return render_template('index.html', featured_posts=featured_posts,
+                           blog_prefix=blog_bp.url_prefix)
 
 app.register_blueprint(home_bp)
 
