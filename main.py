@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask import Blueprint, render_template
 
@@ -27,4 +28,4 @@ app.register_blueprint(home_bp)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
