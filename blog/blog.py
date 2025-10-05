@@ -77,10 +77,10 @@ def post(post_name):
     with open(f'blog/posts/{filename}', 'r', encoding='utf-8') as i:
         text = i.read()
         post_content = md.convert(text)
-    
+
     # Need to replace image paths to be relative to static folder
     post_content = rewrite_img_src(post_content)
-    
+
     title = md.Meta.get('title', [post_name])[0] if hasattr(md, "Meta") else post_name
     return render_template('blog/post.html', title=title, post_content=post_content,
                            meta=getattr(md, "Meta", {}))

@@ -10,15 +10,16 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <header>
-        <nav>
-            <ul class="nav">
-                <li><a href="{{ url_for('home_bp.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-                <li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>
-                <!--<li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>-->
-                <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/about-me') %}active{% endif %}">About Me</a></li>
-            </ul>
-        </nav>
+     <header>
+        <a class="brand" href="/">Kyle B. Neary</a>
+
+        <!-- nav list -->
+        <ul id="site-nav" class="nav" data-open="false">
+            <li><a href="{{ url_for('home_bp.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+            <li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>
+            <!--<li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>-->
+            <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/about-me') %}active{% endif %}">About Me</a></li>
+        </ul>
     </header>
 
     <!-- Main Content -->
