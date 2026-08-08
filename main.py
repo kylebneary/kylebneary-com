@@ -1,6 +1,6 @@
 import os
-from flask import Flask
-from flask import Blueprint, render_template
+
+from flask import Blueprint, Flask, render_template
 
 from about_me.about_me import about_bp
 from blog.blog import blog_bp, get_blog_posts

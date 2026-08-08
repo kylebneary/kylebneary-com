@@ -1,9 +1,10 @@
 import os
-from pathlib import Path
 from datetime import datetime
-from flask import Blueprint, render_template, url_for
-from bs4 import BeautifulSoup
+from pathlib import Path
+
 import markdown
+from bs4 import BeautifulSoup
+from flask import Blueprint, render_template, url_for
 
 blog_bp = Blueprint('blog_bp', __name__,
                     url_prefix='/blog', template_folder='templates',
@@ -11,7 +12,7 @@ blog_bp = Blueprint('blog_bp', __name__,
 
 
 def recommended_posts(blog_posts):
-    """ 
+    """
     Get top three recommended posts
     This will eventually consume more data to make actual recommendations.
     For now, it will just return the three most recent posts.
