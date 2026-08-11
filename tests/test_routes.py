@@ -22,7 +22,7 @@ def test_route_returns_ok(client, path):
 
 def test_home_page_lists_featured_posts(client):
     response = client.get("/")
-    assert b"Featured Posts" in response.data
+    assert b"From the Blog" in response.data
 
 
 def test_home_page_has_meta_description(client):

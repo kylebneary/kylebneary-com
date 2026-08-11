@@ -30,34 +30,42 @@
 
 {% block content %}
     <section class="hero">
-        <img class="hero-photo" src="{{ url_for('static', filename='images/headshot.jpg') }}" alt="Kyle Neary" width="160" height="160">
         <div class="hero-text">
-            <p class="eyebrow">Hi, I'm</p>
-            <h1>Kyle Neary</h1>
-            <p class="hero-tagline">Data Scientist &amp; former Astrophysicist, working on AI, data platforms, and analytics.</p>
-            <p>I've worked across finance, retail, and hospitality, building data platforms and ML systems end to end. This site is where I write about that work and share things I've built.</p>
-            <div class="hero-cta">
-                <a class="button button-primary" href="{{ url_for('blog_bp.index') }}">Read the blog</a>
-                <a class="button button-secondary" href="{{ url_for('projects_bp.index') }}">See projects</a>
-                <a class="button button-secondary" href="{{ url_for('about_bp.index') }}">About me</a>
+            <h1>Data science, after astrophysics.</h1>
+            <p class="hero-lede">I'm Kyle — a data scientist at Nvidia, previously Intel and Great Wolf Resorts. Before any of that, I spent six years chasing galaxy formation through a telescope. This site is the blog, the projects, and the resume that came out of that path.</p>
+            <div class="hero-links">
+                <a class="primary" href="{{ url_for('blog_bp.index') }}">Read the blog &rarr;</a>
+                <a class="secondary" href="{{ url_for('projects_bp.index') }}">See projects</a>
+                <a class="secondary" href="{{ url_for('about_bp.index') }}">About me</a>
             </div>
+        </div>
+        <div class="hero-facts">
+            <p class="k">Now</p>
+            <p class="v">Data Scientist, Nvidia</p>
+            <p class="k">Based in</p>
+            <p class="v">Madison, WI</p>
+            <p class="k">PhD</p>
+            <p class="v">Astronomy &amp; Astrophysics, University of Minnesota</p>
+            <p class="k">Elsewhere</p>
+            <p class="v"><a href="https://github.com/kylebneary" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://www.linkedin.com/in/kylebneary/" target="_blank" rel="noopener">LinkedIn</a></p>
         </div>
     </section>
 
+    {% if featured_posts %}
     <section class="featured">
-        <h2>Featured Posts</h2>
+        <h2>From the Blog</h2>
         <div class="featured-posts">
             {% for post in featured_posts %}
                 <div class="card">
+                    <span class="eyebrow-date">{{ post.publication_date }}</span>
                     <h3><a href="{{blog_prefix}}/{{ post.url }}">{{ post.name }}</a></h3>
-                    <p class="post-meta">{{ post.publication_date }} · {{ post.reading_time }} min read</p>
+                    <p class="post-meta">{{ post.reading_time }} min read</p>
                     <p>{{ post.summary }}</p>
                     <a href="{{blog_prefix}}/{{ post.url }}" class="read-more">Read More &rarr;</a>
                 </div>
-            {% else %}
-                <p>New posts are on the way — check back soon.</p>
             {% endfor %}
         </div>
     </section>
+    {% endif %}
 
 {% endblock %}
