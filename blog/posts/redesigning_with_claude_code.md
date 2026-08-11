@@ -3,7 +3,7 @@ title: Redesigning This Site with Claude Code
 author: Kyle Neary
 summary: How an interactive session with Claude Code took this site from a rough MVP to a real personal profile site — SEO, a real projects page, a design overhaul — in about an hour of my attention.
 publication_date: 2026-08-11
-tags: claude-code, ai-tools, meta, flask
+tags: claude-code, ai-tools, flask
 ---
 
 # Redesigning This Site with Claude Code
