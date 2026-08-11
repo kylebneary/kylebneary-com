@@ -66,7 +66,14 @@ Both run automatically in CI on every pull request (see below).
 
 The site runs on **Google Cloud Run**, built from the root `Dockerfile`.
 
-Deploys are currently manual:
+**Deploys are automatic**: Cloud Run's built-in GitHub integration watches
+`main` and redeploys on every push — there's no committed Cloud Build config
+or GitHub Actions deploy step, it's configured directly on the Cloud Run
+service in GCP. This means **merging a PR into `main` ships to production
+immediately**, which is exactly why nothing gets pushed to `main` directly
+(see below) and why CI (lint + tests) runs on every PR first.
+
+To deploy manually (e.g. to debug the build), you can still run:
 
 ```bash
 gcloud run deploy kylebneary-com \
@@ -74,10 +81,6 @@ gcloud run deploy kylebneary-com \
   --region <region> \
   --project <gcp-project-id>
 ```
-
-There is no automated CD pipeline yet — see
-[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#known-gaps) for what's tracked
-as a follow-up.
 
 ## Contributing / branching model
 
