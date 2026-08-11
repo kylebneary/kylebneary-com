@@ -95,16 +95,17 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 5px;
-    width: 32px;
-    height: 32px;
-    padding: 6px;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
     cursor: pointer;
 }
 .nav-toggle-label span {
     display: block;
     height: 2px;
-    width: 100%;
+    width: 22px;
     background: var(--ink);
 }
 
