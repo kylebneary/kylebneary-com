@@ -27,20 +27,22 @@
 </head>
 <body>
     <header>
-        <div class="header-bar">
-            <a class="brand" href="/">Kyle B. Neary</a>
-            <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox">
-            <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation">
-                <span></span><span></span><span></span>
-            </label>
-        </div>
+        <div class="header-inner">
+            <div class="header-bar">
+                <a class="brand" href="/">Kyle B. Neary</a>
+                <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox">
+                <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </label>
+            </div>
 
-        <ul id="site-nav" class="nav">
-            <li><a href="{{ url_for('home_bp.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-            <li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>
-            <li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>
-            <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/about-me') %}active{% endif %}">About Me</a></li>
-        </ul>
+            <ul id="site-nav" class="nav">
+                <li><a href="{{ url_for('home_bp.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>
+                <li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>
+                <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/about-me') %}active{% endif %}">About Me</a></li>
+            </ul>
+        </div>
     </header>
 
     <main>
