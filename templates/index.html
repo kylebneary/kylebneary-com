@@ -1,13 +1,47 @@
 {% extends 'base.html' %}
 
-{% block title %}Welcome{% endblock %}
+{% block title %}Home{% endblock %}
+{% block meta_description %}Kyle Neary is a data scientist and former astrophysicist working across AI, data platforms, and analytics. Explore his blog, projects, and resume.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kyle Neary",
+    "url": "{{ site_url }}/",
+    "image": "{{ site_url }}{{ url_for('static', filename='images/headshot.jpg') }}",
+    "jobTitle": "Data Scientist",
+    "sameAs": [
+        "https://www.linkedin.com/in/kylebneary/",
+        "https://github.com/kylebneary"
+    ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Kyle B. Neary",
+    "url": "{{ site_url }}/"
+}
+</script>
+{% endblock %}
 
 {% block content %}
-    <section class="intro">
-        <h1>Welcome!</h1>
-        <p>I’m Kyle Neary, a Data Scientist and former Astrophysicist passionate about AI, data science, and technology. I’ve worked across various industries, including finance, retail, and hospitality. Feel free to explore my blog and projects!</p>
-        <p>This site features my blog, interactive data apps, and a digital resume.</p>
-        <p>Everything is still under construction for now, but check back soon to explore my work, projects, and insights on Data Science and AI!</p>
+    <section class="hero">
+        <img class="hero-photo" src="{{ url_for('static', filename='images/headshot.jpg') }}" alt="Kyle Neary" width="160" height="160">
+        <div class="hero-text">
+            <p class="eyebrow">Hi, I'm</p>
+            <h1>Kyle Neary</h1>
+            <p class="hero-tagline">Data Scientist &amp; former Astrophysicist, working on AI, data platforms, and analytics.</p>
+            <p>I've worked across finance, retail, and hospitality, building data platforms and ML systems end to end. This site is where I write about that work and share things I've built.</p>
+            <div class="hero-cta">
+                <a class="button button-primary" href="{{ url_for('blog_bp.index') }}">Read the blog</a>
+                <a class="button button-secondary" href="{{ url_for('projects_bp.index') }}">See projects</a>
+                <a class="button button-secondary" href="{{ url_for('about_bp.index') }}">About me</a>
+            </div>
+        </div>
     </section>
 
     <section class="featured">
@@ -16,9 +50,12 @@
             {% for post in featured_posts %}
                 <div class="card">
                     <h3><a href="{{blog_prefix}}/{{ post.url }}">{{ post.name }}</a></h3>
+                    <p class="post-meta">{{ post.publication_date }} · {{ post.reading_time }} min read</p>
                     <p>{{ post.summary }}</p>
-                    <a href="{{blog_prefix}}/{{ post.url }}" class="read-more">Read More</a>
+                    <a href="{{blog_prefix}}/{{ post.url }}" class="read-more">Read More &rarr;</a>
                 </div>
+            {% else %}
+                <p>New posts are on the way — check back soon.</p>
             {% endfor %}
         </div>
     </section>

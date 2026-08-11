@@ -1,16 +1,18 @@
 # kylebneary.com
 
-Personal website — blog, digital resume, and (eventually) projects — built with
+Personal profile site — blog, digital resume, and projects — built with
 Flask and deployed to Google Cloud Run.
 
 ## Stack
 
 - **Backend**: [Flask](https://flask.palletsprojects.com/) 3.x, organized as Blueprints
-- **Templates**: Jinja2
-- **Blog content**: Markdown files with metadata headers, rendered server-side
-  via `python-markdown` + `beautifulsoup4`
-- **Styling**: a single hand-written stylesheet (`static/css/styles.css`), no
-  frontend build step
+- **Templates**: Jinja2, with a shared `templates/base.html` carrying the
+  design system, nav, footer, and per-page SEO tags (meta description, Open
+  Graph/Twitter cards, canonical URL, JSON-LD)
+- **Blog & project content**: Markdown files with metadata headers, rendered
+  server-side via `python-markdown` + `beautifulsoup4`
+- **Styling**: a single hand-written, token-based stylesheet
+  (`static/css/styles.css`), no frontend build step
 - **Runtime**: `gunicorn` in production, Flask's dev server locally
 - **Hosting**: Docker container on Google Cloud Run
 
@@ -27,6 +29,20 @@ pip install -r requirements.txt -r requirements-dev.txt
 
 python main.py
 # Site available at http://localhost:8080
+```
+
+`main.py` runs with Flask's debug reloader on, so editing a template, route,
+or the stylesheet and refreshing the browser is enough to preview changes —
+no separate build/watch step. This is also how to preview redesign/content
+work before opening a PR into `main` (nothing under `/blog/` or `/projects/`
+requires a rebuild; both re-read their content files on every request).
+
+By default, SEO tags (canonical URLs, sitemap, Open Graph) point at
+`https://www.kylebneary.com`. Override with the `SITE_URL` environment
+variable if you need them to point elsewhere locally:
+
+```bash
+SITE_URL=http://localhost:8080 python main.py
 ```
 
 ### Running tests
@@ -60,7 +76,64 @@ Both run automatically in CI on every pull request (see below).
 4. Posts with a `publication_date` in the future are excluded from listings
    automatically, so you can commit drafts ahead of time.
 5. Reference images with a path starting `images/`; they're rewritten to
-   `blog/static/images/...` automatically at render time.
+   `blog/static/images/...` automatically at render time. The first image in
+   a post is also used as its Open Graph share image automatically.
+6. Optionally add a `tags: python, flask, seo` metadata line — tags render
+   as chips on the post and in the blog index.
+
+Posts also get a per-post RSS entry (`/blog/feed.xml`), a sitemap entry, and
+`BlogPosting` structured data automatically — no extra step needed.
+
+## Adding a project
+
+Projects follow the same pattern as blog posts: each is a Markdown file with
+a metadata header in `projects/data/`.
+
+```markdown
+title: My Project
+summary: One sentence describing what it does
+tech: Python, Flask, GCP
+repo_url: https://github.com/kylebneary/my-project
+live_url: https://my-project.example.com
+status: shipped
+date: 2026-08-08
+
+Longer description goes here (currently unused by the template, reserved
+for a future per-project detail page).
+```
+
+`status` drives the badge on the card (`shipped`, `in-progress`, or
+`coming-soon` all get their own styling — anything else falls back to a
+neutral badge). `repo_url`/`live_url` are both optional; omit either to hide
+that link. Delete the two `coming_soon_*.md` placeholder entries once real
+projects are added — they exist only so `/projects/` isn't empty out of the
+box.
+
+## SEO
+
+Every page gets a meta description, canonical URL, Open Graph/Twitter card
+tags, and JSON-LD structured data (`Person`/`WebSite` on the home page,
+`BlogPosting` on posts, `CollectionPage` on `/projects/`) from
+`templates/base.html` — override the `meta_description`, `og_image`,
+`canonical`, `og_type`, or `structured_data` Jinja blocks in a page template
+if it needs something more specific than the site-wide default.
+
+There's also `/sitemap.xml` (home, blog index, about, projects, and every
+blog post, generated dynamically) and `/robots.txt` (points crawlers at the
+sitemap), and an RSS feed at `/blog/feed.xml`.
+
+**Canonical domain**: all of the above is built from `SITE_URL`
+(`main.py`, defaults to `https://www.kylebneary.com`, overridable via the
+`SITE_URL` env var — see [Local development](#local-development)). Pick a
+single canonical host (`kylebneary.com` vs `www.kylebneary.com`) in Cloud
+Run's domain mapping / DNS and 301-redirect the other one to it — serving
+the site on both without a redirect creates duplicate-content pages in
+Google's eyes. That mapping lives in GCP/DNS, not in this repo, so it isn't
+something a code change can fix — if it turns out the live canonical host is
+different from `SITE_URL`'s default, update the one line in `main.py`.
+
+Search Console/Analytics setup is a separate manual step (needs your own
+Google account) — not something this repo can wire up.
 
 ## Deployment
 

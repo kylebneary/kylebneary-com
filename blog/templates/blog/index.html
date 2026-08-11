@@ -1,39 +1,61 @@
 {% extends 'base.html' %}
 
 {% block title %}Blog{% endblock %}
+{% block meta_description %}Writing on data science, AI, and technology from Kyle Neary.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Kyle B. Neary — Blog",
+    "url": "{{ self.canonical() }}"
+}
+</script>
+{% endblock %}
 
 {% block content %}
     <section class="intro">
-        <h1>Welcome to my blog!</h1>
-        <p>In this space, I'll be sharing my thoughts and insights on data science, artificial intelligence, and technology. From exploring the latest trends in machine learning to diving into real-world applications, I aim to offer valuable content for both seasoned professionals and those new to the field. You'll also find reflections on the intersection of AI and society, as well as personal experiences and projects I'm working on. Join me as I explore the evolving world of data and tech!</p>
-        <p><b>Please Note</b>: All current blog posts, except the most recent, are AI generated to serve as placeholders while I finish construction of this site. I will remove them and replace them with my own writings as soon as possible. Any content written or created with the help of AI will be clearly marked.</p>
+        <h1>Blog</h1>
+        <p>Notes on data science, AI, and technology — mostly things I've run into building real systems, written up in case they're useful to someone else.</p>
     </section>
 
+    {% if featured_posts %}
     <section class="featured">
         <h2>Featured Posts</h2>
         <div class="featured-posts">
             {% for post in featured_posts %}
                 <div class="card">
                     <h3><a href="{{ post.url }}">{{ post.name }}</a></h3>
+                    <p class="post-meta">{{ post.publication_date }} · {{ post.reading_time }} min read</p>
                     <p>{{ post.summary }}</p>
-                    <a href="{{ post.url }}" class="read-more">Read More</a>
+                    <a href="{{ post.url }}" class="read-more">Read More &rarr;</a>
                 </div>
             {% endfor %}
         </div>
     </section>
+    {% endif %}
 
-    <!-- Directory of All Blog Posts -->
     <section class="blog-directory">
         <h2>All Posts</h2>
+        {% if all_posts %}
         <ul>
             {% for post in all_posts %}
                 <li>
-                    <a href="{{ post.url }}">{{ post.name }}</a> - 
-                    <span>{{ post.publication_date }}</span>
+                    <a href="{{ post.url }}">{{ post.name }}</a>
+                    <span class="post-meta">{{ post.publication_date }} · {{ post.reading_time }} min read</span>
                     <p>{{ post.summary }}</p>
+                    {% if post.tags %}
+                    <ul class="tag-list">
+                        {% for tag in post.tags %}<li>{{ tag }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p>No posts yet — the first one is coming soon.</p>
+        {% endif %}
     </section>
 
 {% endblock %}

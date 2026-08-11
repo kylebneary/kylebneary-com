@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
 
 {% block title %}About Me{% endblock %}
+{% block meta_description %}Resume of Kyle Neary — data science and analytics leader with experience at Nvidia, Great Wolf Resorts, and Intel.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kyle Neary",
+    "url": "{{ self.canonical() }}",
+    "jobTitle": "Data Scientist",
+    "alumniOf": [
+        {"@type": "CollegeOrUniversity", "name": "University of Minnesota"},
+        {"@type": "CollegeOrUniversity", "name": "University of Notre Dame"}
+    ],
+    "sameAs": [
+        "https://www.linkedin.com/in/kylebneary/",
+        "https://github.com/kylebneary"
+    ]
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <section class="resume">

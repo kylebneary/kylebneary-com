@@ -3,39 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} | Kyle B. Neary</title>
+    {% set page_title = self.title() %}
+    <title>{{ page_title }} | Kyle B. Neary</title>
+    <meta name="description" content="{% block meta_description %}Kyle Neary is a data scientist and former astrophysicist writing about AI, data, and technology.{% endblock %}">
+    <link rel="canonical" href="{% block canonical %}{{ site_url }}{{ request.path }}{% endblock %}">
+
+    <meta property="og:site_name" content="Kyle B. Neary">
+    <meta property="og:title" content="{{ page_title }} | Kyle B. Neary">
+    <meta property="og:description" content="{{ self.meta_description() }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ self.canonical() }}">
+    <meta property="og:image" content="{% block og_image %}{{ site_url }}{{ url_for('static', filename='images/headshot.jpg') }}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title }} | Kyle B. Neary">
+    <meta name="twitter:description" content="{{ self.meta_description() }}">
+    <meta name="twitter:image" content="{{ self.og_image() }}">
+
+    <meta name="theme-color" content="#1E2A47">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="alternate" type="application/rss+xml" title="Kyle B. Neary — Blog" href="{{ url_for('blog_bp.feed') }}">
+    {% block structured_data %}{% endblock %}
 </head>
 <body>
-    <!-- Navigation Bar -->
-     <header>
-        <a class="brand" href="/">Kyle B. Neary</a>
+    <header>
+        <div class="header-bar">
+            <a class="brand" href="/">Kyle B. Neary</a>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox">
+            <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </label>
+        </div>
 
-        <!-- nav list -->
-        <ul id="site-nav" class="nav" data-open="false">
+        <ul id="site-nav" class="nav">
             <li><a href="{{ url_for('home_bp.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
             <li><a href="{{ url_for('blog_bp.index') }}" class="{% if request.path.startswith('/blog') %}active{% endif %}">Blog</a></li>
-            <!--<li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>-->
+            <li><a href="{{ url_for('projects_bp.index') }}" class="{% if request.path.startswith('/projects') %}active{% endif %}">Projects</a></li>
             <li><a href="{{ url_for('about_bp.index') }}" class="{% if request.path.startswith('/about-me') %}active{% endif %}">About Me</a></li>
         </ul>
     </header>
 
-    <!-- Main Content -->
     <main>
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Kyle Neary</p>
+        <p>&copy; {{ now.year }} Kyle Neary</p>
         <span>|</span>
+        <a href="{{ url_for('blog_bp.feed') }}" title="RSS feed">RSS</a>
         <div class="social-icons">
-            <!--<a href="https://twitter.com/yourhandle" target="_blank" class="fab fa-twitter"></a>-->
-            <a href="https://linkedin.com/in/kylebneary" target="_blank" class="fab fa-linkedin"></a>
-            <!--<a href="https://github.com/yourhandle" target="_blank" class="fab fa-github"></a>-->
-            <!--<a href="https://instagram.com/yourhandle" target="_blank" class="fab fa-instagram"></a>-->
+            <a href="https://linkedin.com/in/kylebneary" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+            </a>
+            <a href="https://github.com/kylebneary" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+                <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            </a>
+            <a href="mailto:kyle.b.neary@gmail.com" title="Email" aria-label="Email">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            </a>
         </div>
     </footer>
 </body>
