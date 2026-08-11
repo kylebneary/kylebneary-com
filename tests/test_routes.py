@@ -11,7 +11,10 @@ def client():
         yield client
 
 
-@pytest.mark.parametrize("path", ["/", "/blog/", "/about-me/", "/projects/"])
+@pytest.mark.parametrize(
+    "path",
+    ["/", "/blog/", "/about-me/", "/projects/", "/sitemap.xml", "/robots.txt", "/blog/feed.xml"],
+)
 def test_route_returns_ok(client, path):
     response = client.get(path)
     assert response.status_code == 200
@@ -19,7 +22,12 @@ def test_route_returns_ok(client, path):
 
 def test_home_page_lists_featured_posts(client):
     response = client.get("/")
-    assert b"Featured Posts" in response.data
+    assert b"From the Blog" in response.data
+
+
+def test_home_page_has_meta_description(client):
+    response = client.get("/")
+    assert b'<meta name="description" content="' in response.data
 
 
 def test_blog_index_lists_posts(client):
@@ -35,3 +43,25 @@ def test_unknown_route_is_404(client):
 def test_individual_blog_post_renders(client):
     response = client.get("/blog/buildging-a-site")
     assert response.status_code == 200
+
+
+def test_blog_feed_lists_posts(client):
+    response = client.get("/blog/feed.xml")
+    assert response.content_type.startswith("application/rss+xml")
+    assert b"<rss" in response.data
+
+
+def test_sitemap_is_xml(client):
+    response = client.get("/sitemap.xml")
+    assert response.content_type.startswith("application/xml")
+    assert b"<urlset" in response.data
+
+
+def test_robots_points_at_sitemap(client):
+    response = client.get("/robots.txt")
+    assert b"Sitemap:" in response.data
+
+
+def test_projects_page_lists_placeholder_entries(client):
+    response = client.get("/projects/")
+    assert b"coming soon" in response.data.lower()

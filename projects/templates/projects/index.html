@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects{% endblock %}
+{% block meta_description %}Coding projects from Kyle Neary, spanning data science, AI, and software engineering.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Kyle Neary's Projects",
+    "url": "{{ self.canonical() }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+    <section class="intro">
+        <h1>Projects</h1>
+        <p>A running list of things I've built or am building — mostly data science, AI, and web tooling. Source and live links are on each card where available.</p>
+    </section>
+
+    <section class="project-grid">
+        {% for project in projects %}
+            <div class="card project-card">
+                <div class="project-card-header">
+                    <h3>{{ project.title }}</h3>
+                    <span class="status-badge status-{{ project.status }}">{{ project.status.replace('-', ' ') }}</span>
+                </div>
+                <p>{{ project.summary }}</p>
+                {% if project.tech %}
+                <ul class="tech-badges">
+                    {% for tech in project.tech %}
+                        <li>{{ tech }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="project-links">
+                    {% if project.repo_url %}<a href="{{ project.repo_url }}" target="_blank" rel="noopener">Source</a>{% endif %}
+                    {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live demo</a>{% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}
