@@ -76,8 +76,12 @@ revisiting if the post count grows substantially.
   and runs `python main.py`.
 - Cloud Run injects `PORT`; `main.py` reads it via
   `os.environ.get("PORT", 8080)`.
-- Deploys today are manual `gcloud run deploy --source .` runs — there is no
-  Cloud Build trigger or GitHub Actions CD workflow yet.
+- **Deploys are automatic**, via Cloud Run's built-in GitHub integration:
+  the Cloud Run service is configured (in the GCP console, not as anything
+  checked into this repo) to watch `main` and build+deploy on every push.
+  There's no `cloudbuild.yaml` or GitHub Actions deploy step — the trigger
+  lives entirely in GCP. **Merging a PR into `main` ships to production
+  within minutes.**
 
 ## Known gaps
 
@@ -94,12 +98,12 @@ deserve a deliberate decision rather than a drive-by edit:
 2. **`/projects/` renders the homepage template**, not a projects-specific
    page (see above). Likely intentional scaffolding, but worth a decision:
    build it out or remove the blueprint until it's ready.
-3. **No CD pipeline.** CI (this repo's `.github/workflows/ci.yml`) only
-   lints and tests. Deploying to Cloud Run is still a manual `gcloud`
-   command. Automating this needs a decision on GCP auth from GitHub Actions
-   (Workload Identity Federation is the recommended approach over a
-   long-lived service account key) plus the target project ID, service
-   name, and region.
+3. **CD isn't gated on CI.** Cloud Run's GitHub integration deploys on every
+   push to `main` regardless of whether `.github/workflows/ci.yml` passed —
+   the two systems don't talk to each other. The only thing standing between
+   a bad push and production is branch protection on `main` (require a PR +
+   passing status checks before merge — see below). Without that enabled,
+   a direct push to `main` skips CI entirely and deploys anyway.
 4. **No caching layer for blog posts** — acceptable today, noted above.
 
 ## Branch protection setup (manual step)
