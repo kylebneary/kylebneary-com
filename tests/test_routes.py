@@ -13,7 +13,10 @@ def client():
 
 @pytest.mark.parametrize(
     "path",
-    ["/", "/blog/", "/about-me/", "/projects/", "/sitemap.xml", "/robots.txt", "/blog/feed.xml"],
+    [
+        "/", "/blog/", "/about-me/", "/projects/", "/sitemap.xml", "/robots.txt",
+        "/blog/feed.xml", "/blog/artificial", "/blog/artificial/feed.xml",
+    ],
 )
 def test_route_returns_ok(client, path):
     response = client.get(path)
@@ -49,6 +52,30 @@ def test_blog_feed_lists_posts(client):
     response = client.get("/blog/feed.xml")
     assert response.content_type.startswith("application/rss+xml")
     assert b"<rss" in response.data
+
+
+def test_artificial_index_includes_only_artificial_posts(client):
+    response = client.get("/blog/artificial")
+    assert response.status_code == 200
+    assert b"About the Premise" in response.data
+    assert b"Redesigning This Site with Claude Code" not in response.data
+
+
+def test_artificial_feed_scoped_to_series(client):
+    response = client.get("/blog/artificial/feed.xml")
+    assert response.content_type.startswith("application/rss+xml")
+    assert b"About the Premise" in response.data
+    assert b"Redesigning This Site with Claude Code" not in response.data
+
+
+def test_artificial_post_shows_series_badge(client):
+    response = client.get("/blog/about-the-premise")
+    assert b"Artificial series" in response.data
+
+
+def test_non_artificial_post_has_no_series_badge(client):
+    response = client.get("/blog/redesigning-with-claude-code")
+    assert b"Artificial series" not in response.data
 
 
 def test_sitemap_is_xml(client):

@@ -20,6 +20,13 @@
         <p>Notes on data science, AI, and technology — mostly things I've run into building real systems, written up in case they're useful to someone else.</p>
     </section>
 
+    <section class="series-callout">
+        <p class="series-callout-kicker">Series</p>
+        <h2 class="series-callout-title">Artificial</h2>
+        <p>AI ethics in both directions — how AI should treat us, and how we should treat&nbsp;it. A running series within this blog.</p>
+        <a href="{{ url_for('blog_bp.artificial_index') }}" class="read-more">Explore the Artificial series &rarr;</a>
+    </section>
+
     {% if featured_posts %}
     <section class="featured">
         <h2>Featured Posts</h2>
@@ -27,7 +34,10 @@
             {% for post in featured_posts %}
                 <div class="card">
                     <span class="eyebrow-date">{{ post.publication_date }}</span>
-                    <h3><a href="{{ post.url }}">{{ post.name }}</a></h3>
+                    <h3>
+                        <a href="{{ post.url }}">{{ post.name }}</a>
+                        {% if post.is_artificial %}<span class="badge-artificial">Artificial</span>{% endif %}
+                    </h3>
                     <p class="post-meta">{{ post.reading_time }} min read</p>
                     <p>{{ post.summary }}</p>
                     <a href="{{ post.url }}" class="read-more">Read More &rarr;</a>
@@ -40,23 +50,8 @@
     <section class="blog-directory">
         <h2>All Posts</h2>
         {% if all_posts %}
-        <ul>
-            {% for post in all_posts %}
-                <li>
-                    <span class="eyebrow-date">{{ post.publication_date }}</span>
-                    <div>
-                        <a class="entry-title" href="{{ post.url }}">{{ post.name }}</a>
-                        <p>{{ post.summary }}</p>
-                        {% if post.tags %}
-                        <ul class="tag-list">
-                            {% for tag in post.tags %}<li>{{ tag }}</li>{% endfor %}
-                        </ul>
-                        {% endif %}
-                        <p class="post-meta">{{ post.reading_time }} min read</p>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+            {% set posts = all_posts %}
+            {% include 'blog/_post_list.html' %}
         {% else %}
         <p>No posts yet — the first one is coming soon.</p>
         {% endif %}

@@ -11,6 +11,7 @@ blog_bp = Blueprint('blog_bp', __name__,
                     static_folder='static', static_url_path='/blog-static')
 
 WORDS_PER_MINUTE = 200
+ARTIFICIAL_TAG = 'artificial'
 
 
 def recommended_posts(blog_posts):
@@ -27,6 +28,10 @@ def _parse_tags(metadata):
     for line in metadata.get('tags', []):
         tags.extend(tag.strip() for tag in line.split(',') if tag.strip())
     return tags
+
+
+def _is_artificial(tags):
+    return ARTIFICIAL_TAG in (tag.lower() for tag in tags)
 
 
 def _reading_time(html):
@@ -62,6 +67,7 @@ def get_blog_posts():
             continue
         else:
             if pub_date < datetime.today():
+                tags = _parse_tags(metadata)
                 blog_posts.append({
                     'url': url,
                     'name': metadata['title'][0],
@@ -69,15 +75,16 @@ def get_blog_posts():
                     'publication_date': pub_date.strftime('%B %d, %Y'),
                     'iso_date': pub_date.strftime('%Y-%m-%d'),
                     'rfc822_date': pub_date.strftime('%a, %d %b %Y 00:00:00 GMT'),
-                    'tags': _parse_tags(metadata),
+                    'tags': tags,
+                    'is_artificial': _is_artificial(tags),
                     'reading_time': _reading_time(html),
                     'image': _first_image(html),
                     '_sort_date': pub_date,
                 })
 
     blog_posts = sorted(blog_posts, key=lambda x: x['_sort_date'], reverse=True)
-    for post in blog_posts:
-        del post['_sort_date']
+    for entry in blog_posts:
+        del entry['_sort_date']
     featured_blog_posts = recommended_posts(blog_posts)
     return blog_posts, featured_blog_posts
 
@@ -94,6 +101,29 @@ def feed():
     """ RSS feed of all blog posts. """
     all_posts, _ = get_blog_posts()
     body = render_template('blog/feed.xml', posts=all_posts)
+    return Response(body, mimetype="application/rss+xml")
+
+
+@blog_bp.route('/artificial')
+def artificial_index():
+    """ Landing page for the Artificial series (AI ethics posts). """
+    all_posts, _ = get_blog_posts()
+    posts = [entry for entry in all_posts if entry['is_artificial']]
+    return render_template('blog/artificial.html', posts=posts)
+
+
+@blog_bp.route('/artificial/feed.xml')
+def artificial_feed():
+    """ RSS feed scoped to the Artificial series. """
+    all_posts, _ = get_blog_posts()
+    posts = [entry for entry in all_posts if entry['is_artificial']]
+    body = render_template(
+        'blog/feed.xml', posts=posts,
+        feed_title='Artificial',
+        feed_description='AI ethics in both directions, from Kyle Neary.',
+        feed_link=url_for('blog_bp.artificial_index'),
+        feed_self=url_for('blog_bp.artificial_feed'),
+    )
     return Response(body, mimetype="application/rss+xml")
 
 
@@ -134,8 +164,10 @@ def post(post_name):
         except ValueError:
             pass
 
+    tags = _parse_tags(meta)
     return render_template('blog/post.html', title=title, summary=summary,
                            post_content=post_content, meta=meta,
                            publication_date=publication_date, display_date=display_date,
-                           tags=_parse_tags(meta), reading_time=reading_time,
-                           image=image, post_name=post_name)
+                           tags=tags, reading_time=reading_time,
+                           image=image, post_name=post_name,
+                           is_artificial=_is_artificial(tags))

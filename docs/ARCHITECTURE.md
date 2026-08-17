@@ -65,6 +65,15 @@ serves post images independently of the site-wide `static/` folder.
   plus every blog post at request time (see `templates/sitemap.xml`).
 - `GET /blog/feed.xml` → `blog_bp.feed` → RSS 2.0 feed built from the same
   `get_blog_posts()` list used by the blog index.
+- `GET /blog/artificial` → `blog_bp.artificial_index` → same post list,
+  filtered to posts tagged `artificial` (case-insensitive), rendered with
+  its own intro copy (`blog/templates/blog/artificial.html`). This is the
+  "Artificial" series landing page: a curated sub-view of the blog, not a
+  separate content directory — posts still live in `blog/posts/` and only
+  need `tags: artificial, ...` to join the series.
+- `GET /blog/artificial/feed.xml` → `blog_bp.artificial_feed` → RSS feed
+  scoped to the same filtered list, reusing `blog/templates/blog/feed.xml`
+  with title/description/link overrides.
 
 ## Content formats
 
@@ -73,6 +82,9 @@ serves post images independently of the site-wide `static/` folder.
 Posts live in `blog/posts/*.md` and are parsed with `python-markdown`'s
 `meta` extension. Required front-matter keys: `title`, `summary`,
 `publication_date` (format `YYYY-MM-DD`). Optional: `tags` (comma-separated).
+A post is considered part of the **Artificial** series (see above) if its
+`tags` include `artificial` — that's the only thing that controls series
+membership, computed by `blog._is_artificial()`.
 Posts are:
 
 - **filtered** to only those with a valid, parseable `publication_date` in

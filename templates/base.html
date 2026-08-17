@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
     <link rel="alternate" type="application/rss+xml" title="Kyle B. Neary — Blog" href="{{ url_for('blog_bp.feed') }}">
+    {% block extra_head %}{% endblock %}
     {% block structured_data %}{% endblock %}
 </head>
 <body>
