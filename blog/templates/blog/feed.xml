@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-    <title>Kyle B. Neary — Blog</title>
-    <link>{{ site_url }}{{ url_for('blog_bp.index') }}</link>
-    <description>Data science, AI, and technology, from Kyle Neary.</description>
+    <title>Kyle B. Neary — {{ feed_title|default('Blog') }}</title>
+    <link>{{ site_url }}{{ feed_link|default(url_for('blog_bp.index')) }}</link>
+    <description>{{ feed_description|default('Data science, AI, and technology, from Kyle Neary.') }}</description>
     <language>en-us</language>
-    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="{{ site_url }}{{ url_for('blog_bp.feed') }}" rel="self" type="application/rss+xml" />
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="{{ site_url }}{{ feed_self|default(url_for('blog_bp.feed')) }}" rel="self" type="application/rss+xml" />
     {% for post in posts %}
     <item>
         <title>{{ post.name }}</title>

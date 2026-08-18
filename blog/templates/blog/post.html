@@ -26,6 +26,12 @@
 {% block content %}
     <article class="blog">
         <header>
+            {% if is_artificial %}
+            <p class="series-strip">
+                <span class="badge-artificial">Artificial</span>
+                Part of the <a href="{{ url_for('blog_bp.artificial_index') }}">Artificial series</a>
+            </p>
+            {% endif %}
             <h1>{{ title }}</h1>
             <p class="post-meta">
                 {% if display_date %}{{ display_date }} · {% endif %}{{ reading_time }} min read
