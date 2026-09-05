@@ -24,7 +24,13 @@
         {% for project in projects %}
             <div class="card project-card">
                 <div class="project-card-header">
-                    <h3>{{ project.title }}</h3>
+                    <h3>
+                        {% if project.has_detail %}
+                            <a href="{{ url_for('projects_bp.detail', slug=project.slug) }}">{{ project.title }}</a>
+                        {% else %}
+                            {{ project.title }}
+                        {% endif %}
+                    </h3>
                     <span class="status-badge status-{{ project.status }}">{{ project.status.replace('-', ' ') }}</span>
                 </div>
                 <p>{{ project.summary }}</p>
@@ -36,6 +42,7 @@
                 </ul>
                 {% endif %}
                 <div class="project-links">
+                    {% if project.has_detail %}<a href="{{ url_for('projects_bp.detail', slug=project.slug) }}">Write-up</a>{% endif %}
                     {% if project.repo_url %}<a href="{{ project.repo_url }}" target="_blank" rel="noopener">Source</a>{% endif %}
                     {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live demo</a>{% endif %}
                 </div>

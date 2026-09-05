@@ -3,3 +3,4 @@ gunicorn==23.0.0
 Werkzeug==3.0.3
 markdown>=3.4
 beautifulsoup4>=4.12
+Pygments>=2.17

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }}{% endblock %}
+{% block meta_description %}{{ project.summary }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block canonical %}{{ site_url }}{{ url_for('projects_bp.detail', slug=project.slug) }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": {{ project.title|tojson }},
+    "description": {{ project.summary|tojson }},
+    "url": "{{ self.canonical() }}",
+    {% if project.repo_url %}"codeRepository": {{ project.repo_url|tojson }},{% endif %}
+    {% if project.tech %}"programmingLanguage": {{ project.tech|tojson }},{% endif %}
+    "author": {
+        "@type": "Person",
+        "name": "Kyle Neary"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+    <div class="project-layout">
+        <article class="blog project-detail">
+            <header>
+                <p class="series-strip">
+                    <a href="{{ url_for('projects_bp.index') }}">&larr; Projects</a>
+                </p>
+                <h1>{{ project.title }}</h1>
+                <p class="post-meta">
+                    <span class="status-badge status-{{ project.status }}">{{ project.status.replace('-', ' ') }}</span>
+                    {% if project.display_date %} · {{ project.display_date }}{% endif %}
+                </p>
+                {% if project.tech %}
+                <ul class="tech-badges">
+                    {% for tech in project.tech %}<li>{{ tech }}</li>{% endfor %}
+                </ul>
+                {% endif %}
+                <div class="project-links">
+                    {% if project.repo_url %}<a href="{{ project.repo_url }}" target="_blank" rel="noopener">Source</a>{% endif %}
+                    {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live demo</a>{% endif %}
+                    {% if has_code %}<a href="{{ url_for('projects_bp.code', slug=project.slug) }}">Browse the code</a>{% endif %}
+                    {% if project.post_url %}<a href="{{ project.post_url }}">Related blog post</a>{% endif %}
+                </div>
+            </header>
+            {{ project.description|safe }}
+        </article>
+
+        {% if project.toc %}
+        <aside class="page-toc" aria-label="On this page">
+            <h2>On this page</h2>
+            {{ project.toc|safe }}
+        </aside>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,3 @@
+[submodule "projects/code/x402-worker-template"]
+	path = projects/code/x402-worker-template
+	url = https://github.com/kylebneary/x402-worker-template.git
