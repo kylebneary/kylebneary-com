@@ -96,9 +96,8 @@ A post is considered part of the **Artificial** series (see above) if its
 membership, computed by `blog._is_artificial()`.
 Posts are:
 
-- **filtered** to only those with a valid, parseable `publication_date` in
-  the past (future-dated posts are silently excluded — this doubles as a
-  simple "draft" mechanism)
+- **filtered** to only those with a valid, parseable `publication_date` that
+  has already passed (see "Scheduled publishing" below)
 - **sorted** newest-first
 - **sliced** to the top 3 for "featured" placements on the home and blog
   index pages
@@ -160,6 +159,39 @@ Dockerfile cannot initialise it either. When the mirror is missing,
 so the write-up's deep links always land somewhere real. The visible symptom of
 a build that skipped submodules is therefore `/projects/caliper/code` bouncing
 to github.com rather than rendering in-site.
+
+## Scheduled publishing
+
+`content.py` holds the one parser both the blog and projects use.
+`parse_publication()` accepts a bare date (`2026-09-15`, meaning midnight), a
+date and time (`2026-09-15 09:30`), or either with an explicit offset
+(`2026-09-15T09:30-05:00`). Anything without an offset is interpreted as
+wall-clock time in `SITE_TZ` (default `America/Chicago`) — **not** the
+server's local time, since Cloud Run runs in UTC and would otherwise publish
+five or six hours early.
+
+`is_published()` gates visibility. For posts that means listings, the home
+page, both RSS feeds, the sitemap, *and* the post's own route — the URL is
+derived from the filename and therefore guessable, so the route has to refuse
+a future post rather than rely on nobody linking to it. For projects it gates
+the card, the detail page, the code explorer, and the sitemap entry. An
+undated project stays visible; an undated post does not, matching how each
+behaved before times were supported.
+
+Nothing runs at publication time. Content is re-read from disk on every
+request with no caching, so a scheduled item becomes visible on its own the
+moment its stamp passes — no deploy, no cron, and nothing that can fail at
+the moment it matters. The practical consequence is that **merging to `main`
+and publishing are separable**: ship the code whenever, and let the stamp
+decide when readers see it.
+
+`SHOW_UNPUBLISHED=1` reveals future-dated content, for previewing locally or
+verifying a deploy before its content is due. Production leaves it unset.
+
+`site_timezone()` falls back to UTC rather than raising if the tz database is
+missing, since an exception there would take down every page that reads dated
+content — which is all of them. `tzdata` is in `requirements.txt` so the
+lookup works regardless of what the base image ships.
 
 ## Deployment
 

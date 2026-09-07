@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import markdown
@@ -8,6 +8,8 @@ from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import TextLexer, get_lexer_for_filename
 from pygments.util import ClassNotFound
+
+from content import is_published, parse_publication
 
 projects_bp = Blueprint('projects_bp', __name__,
     template_folder='templates', url_prefix='/projects')
@@ -57,11 +59,7 @@ def _build_project(path, md):
     toc = getattr(md, 'toc', '')
     md.reset()
 
-    date_str = metadata.get('date', [''])[0]
-    try:
-        sort_date = datetime.strptime(date_str, "%Y-%m-%d")
-    except ValueError:
-        sort_date = datetime.min
+    stamp = parse_publication(metadata.get('date', [''])[0])
 
     status = metadata.get('status', ['in-progress'])[0]
 
@@ -78,13 +76,9 @@ def _build_project(path, md):
         'live_url': metadata.get('live_url', [None])[0],
         'post_url': metadata.get('post_url', [None])[0],
         'status': status,
-        'display_date': (
-            sort_date.strftime('%B %Y') if sort_date != datetime.min else None
-        ),
-        'iso_date': (
-            sort_date.strftime('%Y-%m-%d') if sort_date != datetime.min else None
-        ),
-        '_sort_date': sort_date,
+        'display_date': stamp.strftime('%B %Y') if stamp else None,
+        'iso_date': stamp.strftime('%Y-%m-%d') if stamp else None,
+        '_stamp': stamp,
     }
 
 
@@ -97,9 +91,20 @@ def get_projects():
     files = [i for i in DATA_DIR.iterdir() if i.is_file() and i.suffix == '.md']
     projects = [_build_project(i, md) for i in sorted(files, key=os.path.getmtime)]
 
-    projects = sorted(projects, key=lambda p: p['_sort_date'], reverse=True)
+    # A dated project is withheld until its date passes, which is what makes
+    # a project page schedulable. An undated one has nothing to wait for and
+    # stays visible, preserving how entries behaved before dates gated
+    # anything.
+    projects = [p for p in projects
+                if p['_stamp'] is None or is_published(p['_stamp'])]
+
+    projects = sorted(
+        projects,
+        key=lambda p: p['_stamp'] or datetime.min.replace(tzinfo=UTC),
+        reverse=True,
+    )
     for project in projects:
-        del project['_sort_date']
+        del project['_stamp']
     return projects
 
 
