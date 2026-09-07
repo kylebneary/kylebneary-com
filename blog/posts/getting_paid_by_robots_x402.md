@@ -2,7 +2,7 @@
 title: Getting Paid by Robots
 author: Kyle Neary
 summary: A walk through x402 — the protocol that lets one AI agent pay another for an API call — and an honest log of what it actually took to ship an endpoint on it, including the two days I lost to a wallet CLI that doesn't work on Windows.
-publication_date: 2026-08-30
+publication_date: 2026-09-08 09:30
 tags: x402, agentic-commerce, cloudflare, typescript
 ---
 

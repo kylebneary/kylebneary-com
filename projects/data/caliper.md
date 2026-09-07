@@ -6,7 +6,7 @@ code_dir: x402-worker-template
 live_url:
 post_url: /blog/getting-paid-by-robots-x402
 status: in-progress
-date: 2026-08-30
+date: 2026-09-08 09:30
 
 <!-- GENERATED FILE — do not edit. Produced by scripts/gen-site-page.ts in the
      x402-bazaar repo; the prose lives in site-integration/caliper.md.tmpl and

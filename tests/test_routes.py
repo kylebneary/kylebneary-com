@@ -11,12 +11,26 @@ def client():
         yield client
 
 
+@pytest.fixture()
+def preview_client(monkeypatch):
+    """
+    A client that sees future-dated content.
+
+    Tests of the Caliper showcase exercise its machinery, not its schedule --
+    without this they would flip to failing the moment its publication date
+    moves into the future.
+    """
+    monkeypatch.setenv("SHOW_UNPUBLISHED", "1")
+    app.config.update(TESTING=True)
+    with app.test_client() as client:
+        yield client
+
+
 @pytest.mark.parametrize(
     "path",
     [
         "/", "/blog/", "/about-me/", "/projects/", "/sitemap.xml", "/robots.txt",
         "/blog/feed.xml", "/blog/artificial", "/blog/artificial/feed.xml",
-        "/projects/caliper",
     ],
 )
 def test_route_returns_ok(client, path):
@@ -90,19 +104,19 @@ def test_robots_points_at_sitemap(client):
     assert b"Sitemap:" in response.data
 
 
-def test_projects_page_lists_placeholder_entries(client):
-    response = client.get("/projects/")
+def test_projects_page_lists_placeholder_entries(preview_client):
+    response = preview_client.get("/projects/")
     assert b"coming soon" in response.data.lower()
 
 
-def test_project_detail_renders(client):
-    response = client.get("/projects/caliper")
+def test_project_detail_renders(preview_client):
+    response = preview_client.get("/projects/caliper")
     assert response.status_code == 200
     assert b"Caliper" in response.data
 
 
-def test_project_index_links_to_detail(client):
-    response = client.get("/projects/")
+def test_project_index_links_to_detail(preview_client):
+    response = preview_client.get("/projects/")
     assert b'href="/projects/caliper"' in response.data
 
 
@@ -124,24 +138,24 @@ def test_coming_soon_placeholders_have_no_detail_page(client):
         assert f'href="/projects/{project["slug"]}"'.encode() not in index
 
 
-def test_sitemap_includes_project_detail(client):
-    response = client.get("/sitemap.xml")
+def test_sitemap_includes_project_detail(preview_client):
+    response = preview_client.get("/sitemap.xml")
     assert b"/projects/caliper" in response.data
 
 
-def test_post_renders_highlighted_code_and_tables(client):
-    response = client.get("/blog/getting-paid-by-robots-x402")
+def test_post_renders_highlighted_code_and_tables(preview_client):
+    response = preview_client.get("/blog/getting-paid-by-robots-x402")
     assert response.status_code == 200
     assert b'<div class="codehilite">' in response.data
     assert b'class="k' in response.data, "code should be syntax highlighted"
     assert b"<table>" in response.data
 
 
-def test_project_detail_has_toc_wired_to_real_anchors(client):
+def test_project_detail_has_toc_wired_to_real_anchors(preview_client):
     """Every TOC link must point at a heading id that exists on the page."""
     import re
 
-    body = client.get("/projects/caliper").get_data(as_text=True)
+    body = preview_client.get("/projects/caliper").get_data(as_text=True)
     assert 'class="page-toc"' in body
     assert '<div class="toc">' in body
 
@@ -151,14 +165,14 @@ def test_project_detail_has_toc_wired_to_real_anchors(client):
     assert links <= targets, f"dangling TOC links: {sorted(links - targets)}"
 
 
-def test_project_detail_highlights_code(client):
-    body = client.get("/projects/caliper").get_data(as_text=True)
+def test_project_detail_highlights_code(preview_client):
+    body = preview_client.get("/projects/caliper").get_data(as_text=True)
     assert '<div class="codehilite">' in body
     assert 'class="k' in body
 
 
-def test_project_detail_inlines_diagram(client):
-    body = client.get("/projects/caliper").get_data(as_text=True)
+def test_project_detail_inlines_diagram(preview_client):
+    body = preview_client.get("/projects/caliper").get_data(as_text=True)
     assert 'class="diagram"' in body
     assert 'viewBox="0 0 700 396"' in body
 
@@ -167,71 +181,71 @@ def test_project_detail_inlines_diagram(client):
 # Code explorer
 # ---------------------------------------------------------------------------
 
-def test_code_index_lists_source_files(client):
-    response = client.get("/projects/caliper/code")
+def test_code_index_lists_source_files(preview_client):
+    response = preview_client.get("/projects/caliper/code")
     assert response.status_code == 200
     assert b"src/index.ts" in response.data
     assert b"scripts/smoke-test.ts" in response.data
 
 
-def test_code_index_excludes_lockfile(client):
+def test_code_index_excludes_lockfile(preview_client):
     """package-lock.json is machine-written and would drown the file list."""
-    response = client.get("/projects/caliper/code")
+    response = preview_client.get("/projects/caliper/code")
     assert b"package-lock.json" not in response.data
 
 
-def test_code_file_renders_highlighted_source(client):
-    response = client.get("/projects/caliper/code/src/index.ts")
+def test_code_file_renders_highlighted_source(preview_client):
+    response = preview_client.get("/projects/caliper/code/src/index.ts")
     assert response.status_code == 200
     assert b"codehilite" in response.data
     assert b"paymentMiddleware" in response.data
 
 
-def test_code_file_has_line_anchors_for_deep_links(client):
+def test_code_file_has_line_anchors_for_deep_links(preview_client):
     """The write-up links to #L-<n>, so every line needs a matching span id."""
-    response = client.get("/projects/caliper/code/src/index.ts")
+    response = preview_client.get("/projects/caliper/code/src/index.ts")
     assert b'id="L-1"' in response.data
     assert b'id="L-48"' in response.data
 
 
-def test_write_up_deep_links_resolve(client):
+def test_write_up_deep_links_resolve(preview_client):
     """Every code-source caption on the write-up must point at a live URL."""
     import re
 
-    page = client.get("/projects/caliper").data.decode("utf-8")
+    page = preview_client.get("/projects/caliper").data.decode("utf-8")
     hrefs = re.findall(r'<p class="code-source"><a href="([^"]+)"', page)
     assert hrefs, "write-up emitted no code-source captions"
     for href in hrefs:
         path, _, fragment = href.partition("#")
-        assert client.get(path).status_code == 200, f"dead link: {href}"
+        assert preview_client.get(path).status_code == 200, f"dead link: {href}"
         if fragment:
-            body = client.get(path).data
+            body = preview_client.get(path).data
             assert f'id="{fragment}"'.encode() in body, f"dead anchor: {href}"
 
 
-def test_code_rejects_path_traversal(client):
+def test_code_rejects_path_traversal(preview_client):
     for attempt in [
         "/projects/caliper/code/../../../main.py",
         "/projects/caliper/code/..%2f..%2fmain.py",
         "/projects/caliper/code/src/../../../requirements.txt",
     ]:
-        assert client.get(attempt).status_code in (301, 308, 404)
+        assert preview_client.get(attempt).status_code in (301, 308, 404)
 
 
-def test_code_rejects_unknown_file(client):
-    assert client.get("/projects/caliper/code/src/nope.ts").status_code == 404
+def test_code_rejects_unknown_file(preview_client):
+    assert preview_client.get("/projects/caliper/code/src/nope.ts").status_code == 404
 
 
-def test_code_404s_for_project_without_mirror(client):
-    assert client.get("/projects/coming-soon-1/code").status_code == 404
+def test_code_404s_for_project_without_mirror(preview_client):
+    assert preview_client.get("/projects/coming-soon-1/code").status_code == 404
 
 
-def test_detail_page_links_to_code_explorer(client):
-    response = client.get("/projects/caliper")
+def test_detail_page_links_to_code_explorer(preview_client):
+    response = preview_client.get("/projects/caliper")
     assert b"/projects/caliper/code" in response.data
 
 
-def test_code_redirects_to_github_when_mirror_missing(client, tmp_path, monkeypatch):
+def test_code_redirects_to_github_when_mirror_missing(preview_client, tmp_path, monkeypatch):
     """
     Cloud Run's build may not initialise submodules, leaving the mirror empty.
     The write-up links into these URLs, so they must reach the real file rather
@@ -241,13 +255,13 @@ def test_code_redirects_to_github_when_mirror_missing(client, tmp_path, monkeypa
 
     monkeypatch.setattr(projects, "CODE_DIR", tmp_path)
 
-    index = client.get("/projects/caliper/code")
+    index = preview_client.get("/projects/caliper/code")
     assert index.status_code == 302
     assert index.headers["Location"] == (
         "https://github.com/kylebneary/x402-worker-template"
     )
 
-    one_file = client.get("/projects/caliper/code/src/index.ts")
+    one_file = preview_client.get("/projects/caliper/code/src/index.ts")
     assert one_file.status_code == 302
     assert one_file.headers["Location"] == (
         "https://github.com/kylebneary/x402-worker-template/blob/main/src/index.ts"
@@ -432,7 +446,36 @@ def test_undated_project_stays_visible(client, scheduled_project):
     assert client.get(f"/projects/{slug}").status_code == 200
 
 
-def test_caliper_and_placeholders_unaffected(client):
-    response = client.get("/projects/")
+def test_caliper_and_placeholders_unaffected(preview_client):
+    response = preview_client.get("/projects/")
     assert b"Caliper" in response.data
     assert b"coming soon" in response.data.lower()
+
+
+def test_caliper_and_its_post_publish_together():
+    """
+    The write-up and its companion post are cross-linked, so one appearing
+    without the other would ship a dead link in both directions. Asserted
+    against their stamps rather than the clock, so this holds before and
+    after publication.
+    """
+    from datetime import timedelta
+    from pathlib import Path
+
+    from content import is_published, parse_publication
+
+    def stamp_of(path, key):
+        for line in Path(path).read_text(encoding="utf-8").splitlines():
+            if line.startswith(f"{key}:"):
+                return parse_publication(line.split(":", 1)[1].strip())
+        raise AssertionError(f"no {key} in {path}")
+
+    project = stamp_of("projects/data/caliper.md", "date")
+    post = stamp_of("blog/posts/getting_paid_by_robots_x402.md", "publication_date")
+
+    assert project is not None and post is not None
+    assert project == post, "showcase and post must share one publication moment"
+
+    assert not is_published(project, now=project - timedelta(minutes=1))
+    assert is_published(project, now=project)
+    assert is_published(post, now=post + timedelta(minutes=1))
