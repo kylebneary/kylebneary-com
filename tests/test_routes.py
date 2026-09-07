@@ -104,8 +104,13 @@ def test_robots_points_at_sitemap(client):
     assert b"Sitemap:" in response.data
 
 
-def test_projects_page_lists_placeholder_entries(preview_client):
-    response = preview_client.get("/projects/")
+def test_projects_page_renders_empty_state_when_nothing_published(client, monkeypatch):
+    """With every project scheduled or absent, the grid must not render bare."""
+    from projects import projects
+
+    monkeypatch.setattr(projects, "get_projects", lambda: [])
+    response = client.get("/projects/")
+    assert response.status_code == 200
     assert b"coming soon" in response.data.lower()
 
 
@@ -125,17 +130,17 @@ def test_unknown_project_is_404(client):
     assert response.status_code == 404
 
 
-def test_coming_soon_placeholders_have_no_detail_page(client):
-    """Placeholder entries must not get a detail page or an index link."""
-    from projects.projects import get_projects
+def test_coming_soon_status_gets_no_detail_page(client, placeholder_project):
+    """A coming-soon entry shows as a card but must not get a detail page."""
+    from projects.projects import get_project
 
-    placeholders = [p for p in get_projects() if p["status"] == "coming-soon"]
-    assert placeholders, "expected at least one coming-soon placeholder"
+    slug = placeholder_project()
+    assert get_project(slug)["has_detail"] is False
+    assert client.get(f"/projects/{slug}").status_code == 404
+
     index = client.get("/projects/").get_data()
-    for project in placeholders:
-        assert project["has_detail"] is False
-        assert client.get(f"/projects/{project['slug']}").status_code == 404
-        assert f'href="/projects/{project["slug"]}"'.encode() not in index
+    assert b"Placeholder Entry" in index, "card should still render"
+    assert f'href="/projects/{slug}"'.encode() not in index
 
 
 def test_sitemap_includes_project_detail(preview_client):
@@ -236,8 +241,10 @@ def test_code_rejects_unknown_file(preview_client):
     assert preview_client.get("/projects/caliper/code/src/nope.ts").status_code == 404
 
 
-def test_code_404s_for_project_without_mirror(preview_client):
-    assert preview_client.get("/projects/coming-soon-1/code").status_code == 404
+def test_code_404s_for_project_without_mirror(preview_client, scheduled_project):
+    """No code_dir and no repo_url means there is nothing to browse or link."""
+    slug = scheduled_project("2020-01-01")
+    assert preview_client.get(f"/projects/{slug}/code").status_code == 404
 
 
 def test_detail_page_links_to_code_explorer(preview_client):
@@ -288,6 +295,33 @@ def scheduled_post(tmp_path_factory):
             f"tags: test\n\nBody text.\n",
             encoding="utf-8",
         )
+        created.append(path)
+        return name.replace("_", "-")
+
+    yield make
+    for path in created:
+        path.unlink(missing_ok=True)
+
+
+PLACEHOLDER_MD = """title: Placeholder Entry
+summary: Reserved for something real.
+status: coming-soon
+date: 2020-01-01
+
+Body text.
+"""
+
+
+@pytest.fixture()
+def placeholder_project():
+    """Write a coming-soon entry, yield its slug, then remove it."""
+    from pathlib import Path
+
+    created = []
+
+    def make(name="zz_placeholder_probe"):
+        path = Path("projects/data") / f"{name}.md"
+        path.write_text(PLACEHOLDER_MD, encoding="utf-8")
         created.append(path)
         return name.replace("_", "-")
 
@@ -446,10 +480,9 @@ def test_undated_project_stays_visible(client, scheduled_project):
     assert client.get(f"/projects/{slug}").status_code == 200
 
 
-def test_caliper_and_placeholders_unaffected(preview_client):
+def test_caliper_still_renders(preview_client):
     response = preview_client.get("/projects/")
     assert b"Caliper" in response.data
-    assert b"coming soon" in response.data.lower()
 
 
 def test_caliper_and_its_post_publish_together():

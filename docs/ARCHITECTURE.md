@@ -117,8 +117,10 @@ blog posts (parsed by `projects.projects.get_projects()`, same
 `title`, `summary`, `tech` (comma-separated), `repo_url`, `live_url`,
 `status`, `date` (sort order and display), `post_url` (a related blog post),
 and `code_dir` (see "Code mirrors"). A project earns a detail page when it has
-a real Markdown body *and* a status other than `coming-soon`; the two
-placeholder entries stay card-only and their detail URLs 404.
+a real Markdown body *and* a status other than `coming-soon`, so a
+`coming-soon` entry stays card-only and its detail URL 404s. When nothing is
+published — every project scheduled, or none present — the index renders an
+empty-state line rather than a bare grid.
 
 `projects/data/caliper.md` is **generated** — it is produced by
 `scripts/gen-site-page.ts` in the (private) `x402-bazaar` repo, which extracts

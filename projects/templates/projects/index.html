@@ -47,6 +47,8 @@
                     {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live demo</a>{% endif %}
                 </div>
             </div>
+        {% else %}
+            <p>Nothing published yet — the first write-up is coming soon.</p>
         {% endfor %}
     </section>
 {% endblock %}

@@ -126,9 +126,10 @@ for a future per-project detail page).
 `status` drives the badge on the card (`shipped`, `in-progress`, or
 `coming-soon` all get their own styling — anything else falls back to a
 neutral badge). `repo_url`/`live_url` are both optional; omit either to hide
-that link. Delete the two `coming_soon_*.md` placeholder entries once real
-projects are added — they exist only so `/projects/` isn't empty out of the
-box.
+that link. A `coming-soon` entry renders as a card but gets no detail page,
+which is how to list something before it's written up. When no project is
+published, `/projects/` falls back to an empty-state line rather than an
+empty grid.
 
 ## SEO
 
