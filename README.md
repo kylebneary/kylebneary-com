@@ -73,8 +73,29 @@ Both run automatically in CI on every pull request (see below).
    ```
 3. The post's URL slug is the filename with underscores replaced by hyphens
    and the extension dropped (`my_new_post.md` → `/blog/my-new-post`).
-4. Posts with a `publication_date` in the future are excluded from listings
-   automatically, so you can commit drafts ahead of time.
+4. Posts with a `publication_date` in the future are withheld — from
+   listings, the RSS feed, the sitemap, and their own URL — until that moment
+   passes. **The stamp accepts a time**, so publication can be scheduled to
+   the minute:
+
+   ```markdown
+   publication_date: 2026-09-15          # midnight
+   publication_date: 2026-09-15 09:30    # 9:30am, site timezone
+   publication_date: 2026-09-15T09:30-05:00   # explicit offset
+   ```
+
+   Bare stamps are read as wall-clock time in `SITE_TZ` (default
+   `America/Chicago`), not the server's timezone — Cloud Run runs in UTC,
+   which is why this is set explicitly. Nothing has to run at publication
+   time: content is re-read from disk on every request, so a scheduled item
+   appears on its own with no deploy and no cron job.
+
+   To preview scheduled content before its date, run with
+   `SHOW_UNPUBLISHED=1`. Production leaves it unset.
+
+   The same applies to a project's `date:` in `projects/data/*.md`, which
+   gates its card, its write-up page, its code explorer, and its sitemap
+   entry. An *undated* project has nothing to wait for and stays visible.
 5. Reference images with a path starting `images/`; they're rewritten to
    `blog/static/images/...` automatically at render time. The first image in
    a post is also used as its Open Graph share image automatically.
