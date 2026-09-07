@@ -25,6 +25,14 @@
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
+    {% for project in projects %}
+    <url>
+        <loc>{{ site_url }}{{ url_for('projects_bp.detail', slug=project.slug) }}</loc>
+        {% if project.iso_date %}<lastmod>{{ project.iso_date }}</lastmod>{% endif %}
+        <changefreq>monthly</changefreq>
+        <priority>0.65</priority>
+    </url>
+    {% endfor %}
     {% for post in posts %}
     <url>
         <loc>{{ site_url }}{{ url_for('blog_bp.post', post_name=post.url) }}</loc>

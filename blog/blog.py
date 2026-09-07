@@ -11,6 +11,10 @@ blog_bp = Blueprint('blog_bp', __name__,
                     static_folder='static', static_url_path='/blog-static')
 
 WORDS_PER_MINUTE = 200
+MARKDOWN_EXTENSIONS = ['meta', 'fenced_code', 'tables', 'toc', 'codehilite']
+MARKDOWN_EXTENSION_CONFIGS = {
+    'codehilite': {'guess_lang': False, 'css_class': 'codehilite'},
+}
 ARTIFICIAL_TAG = 'artificial'
 
 
@@ -49,7 +53,8 @@ def _first_image(html):
 
 def get_blog_posts():
     """ Get all blog posts. """
-    md = markdown.Markdown(extensions=['meta'])
+    md = markdown.Markdown(extensions=MARKDOWN_EXTENSIONS,
+                          extension_configs=MARKDOWN_EXTENSION_CONFIGS)
     files = [i for i in Path('./blog/posts').iterdir() if i.is_file()]
     files = sorted(files, key=os.path.getmtime)
     blog_posts = []
@@ -141,7 +146,8 @@ def rewrite_img_src(html):
 def post(post_name):
     """ Page for single blog post. """
     # Find the related file
-    md = markdown.Markdown(extensions=['meta'])
+    md = markdown.Markdown(extensions=MARKDOWN_EXTENSIONS,
+                          extension_configs=MARKDOWN_EXTENSION_CONFIGS)
     filename = post_name.replace('-', '_') + '.md'
     with open(f'blog/posts/{filename}', 'r', encoding='utf-8') as i:
         text = i.read()

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ current or 'Source' }} — {{ project.title }}{% endblock %}
+{% block meta_description %}Browse the source for {{ project.title }}: {{ project.summary }}{% endblock %}
+{% block canonical %}{{ site_url }}{{ url_for('projects_bp.code', slug=project.slug, filepath=current) }}{% endblock %}
+
+{# The mirror is a snapshot of a public repo. Let search engines index the
+   write-up and the canonical repo instead of a second copy of the code. #}
+{% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
+
+{% block content %}
+    <div class="code-layout">
+        <aside class="code-tree" aria-label="Files">
+            <p class="code-tree-head">
+                <a href="{{ url_for('projects_bp.detail', slug=project.slug) }}">&larr; {{ project.title }}</a>
+            </p>
+            {% for directory, entries in groups %}
+                <p class="code-tree-dir">{{ directory or '/' }}</p>
+                <ul>
+                    {% for name, path in entries %}
+                        <li>
+                            <a href="{{ url_for('projects_bp.code', slug=project.slug, filepath=path) }}"
+                               {% if path == current %}class="current" aria-current="page"{% endif %}>{{ name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </aside>
+
+        <section class="code-view">
+            {% if source %}
+                <h1 class="code-path">{{ current }}</h1>
+                <p class="code-actions">
+                    {% if project.repo_url %}<a href="{{ project.repo_url }}/blob/main/{{ current }}" target="_blank" rel="noopener">View on GitHub</a>{% endif %}
+                </p>
+                {{ source|safe }}
+            {% else %}
+                <h1>{{ project.title }} source</h1>
+                <p class="code-intro">
+                    A snapshot of
+                    {% if project.repo_url %}<a href="{{ project.repo_url }}" target="_blank" rel="noopener">the public template</a>{% else %}the public template{% endif %},
+                    vendored into this site so the write-up can point at exact
+                    lines. Pick a file to read it. The
+                    <a href="{{ url_for('projects_bp.detail', slug=project.slug) }}">write-up</a>
+                    walks the same code in order, with commentary.
+                </p>
+                <ul class="code-file-list">
+                    {% for path in files %}
+                        <li><a href="{{ url_for('projects_bp.code', slug=project.slug, filepath=path) }}">{{ path }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}
