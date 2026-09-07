@@ -60,6 +60,15 @@ serves post images independently of the site-wide `static/` folder.
 - `GET /projects/` → `projects_bp.index` → reads every Markdown file in
   `projects/data/` via `projects.projects.get_projects()` and renders a card
   grid (`projects/templates/projects/index.html`).
+- `GET /projects/<slug>` → `projects_bp.detail` → renders one project's
+  Markdown body as a full write-up, styled like a blog post, with an
+  auto-generated table of contents. Slug is the filename with underscores
+  swapped for hyphens, exactly like the blog. Placeholder entries (see below)
+  have no body worth showing and 404 here.
+- `GET /projects/<slug>/code` and `GET /projects/<slug>/code/<path>` →
+  `projects_bp.code` → a browsable file tree over the project's vendored code
+  mirror, with server-side Pygments highlighting and a line anchor (`#L-<n>`)
+  on every line. See "Code mirrors" below.
 - `GET /sitemap.xml`, `GET /robots.txt` → defined directly on `app` in
   `main.py`; the sitemap is generated from the blog/about/projects routes
   plus every blog post at request time (see `templates/sitemap.xml`).
@@ -87,9 +96,8 @@ A post is considered part of the **Artificial** series (see above) if its
 membership, computed by `blog._is_artificial()`.
 Posts are:
 
-- **filtered** to only those with a valid, parseable `publication_date` in
-  the past (future-dated posts are silently excluded — this doubles as a
-  simple "draft" mechanism)
+- **filtered** to only those with a valid, parseable `publication_date` that
+  has already passed (see "Scheduled publishing" below)
 - **sorted** newest-first
 - **sliced** to the top 3 for "featured" placements on the home and blog
   index pages
@@ -107,10 +115,85 @@ revisiting if the post count grows substantially.
 blog posts (parsed by `projects.projects.get_projects()`, same
 `markdown.Markdown(extensions=['meta'])` approach). Front-matter keys:
 `title`, `summary`, `tech` (comma-separated), `repo_url`, `live_url`,
-`status`, `date` (used only for sort order, newest first). There's no
-per-project detail page yet — the index renders cards that link out to
-`repo_url`/`live_url` directly. Ships with two `coming-soon`-status
-placeholder entries so the page isn't empty before real projects are added.
+`status`, `date` (sort order and display), `post_url` (a related blog post),
+and `code_dir` (see "Code mirrors"). A project earns a detail page when it has
+a real Markdown body *and* a status other than `coming-soon`, so a
+`coming-soon` entry stays card-only and its detail URL 404s. When nothing is
+published — every project scheduled, or none present — the index renders an
+empty-state line rather than a bare grid.
+
+`projects/data/caliper.md` is **generated** — it is produced by
+`scripts/gen-site-page.ts` in the (private) `x402-bazaar` repo, which extracts
+every code block from the source that actually deploys, located by literal
+anchor text rather than line numbers. Editing it here is pointless: the next
+regeneration overwrites it. The prose lives in that repo's
+`site-integration/caliper.md.tmpl`.
+
+### Code mirrors
+
+A project with a `code_dir` key gets a browsable copy of its source at
+`/projects/<slug>/code`. The mirror is a **git submodule** under
+`projects/code/`:
+
+```
+projects/code/x402-worker-template  ->  github.com/kylebneary/x402-worker-template
+```
+
+`get_code_files()` walks it, skipping VCS/build noise and lockfiles
+(`CODE_SKIP`). File reads are whitelisted against that listing and the
+resolved path is confirmed to sit inside the mirror root, so a `../..` in the
+URL cannot escape the submodule. Files over `MAX_CODE_BYTES` (256KB) are not
+served.
+
+The write-up's code blocks caption themselves with the file and line they came
+from, linking to `/projects/<slug>/code/<file>#L-<n>` — which is why the
+formatter uses Pygments' `linespans` rather than `lineanchors`: `linespans`
+wraps each line in a span carrying the id, so `:target` can highlight the whole
+line. `tests/test_routes.py::test_write_up_deep_links_resolve` walks every
+caption on the rendered page and asserts both the URL and the anchor exist, so
+a snippet that drifts out of range fails CI rather than shipping a dead link.
+
+**Submodules must be initialised or the mirror is empty.** CI does this
+(`submodules: true` on `actions/checkout`). Cloud Run's GitHub integration is
+outside this repo and may not — and `.dockerignore` excludes `.git`, so the
+Dockerfile cannot initialise it either. When the mirror is missing,
+`projects_bp.code` **redirects to the canonical GitHub URL** instead of 404ing,
+so the write-up's deep links always land somewhere real. The visible symptom of
+a build that skipped submodules is therefore `/projects/caliper/code` bouncing
+to github.com rather than rendering in-site.
+
+## Scheduled publishing
+
+`content.py` holds the one parser both the blog and projects use.
+`parse_publication()` accepts a bare date (`2026-09-15`, meaning midnight), a
+date and time (`2026-09-15 09:30`), or either with an explicit offset
+(`2026-09-15T09:30-05:00`). Anything without an offset is interpreted as
+wall-clock time in `SITE_TZ` (default `America/Chicago`) — **not** the
+server's local time, since Cloud Run runs in UTC and would otherwise publish
+five or six hours early.
+
+`is_published()` gates visibility. For posts that means listings, the home
+page, both RSS feeds, the sitemap, *and* the post's own route — the URL is
+derived from the filename and therefore guessable, so the route has to refuse
+a future post rather than rely on nobody linking to it. For projects it gates
+the card, the detail page, the code explorer, and the sitemap entry. An
+undated project stays visible; an undated post does not, matching how each
+behaved before times were supported.
+
+Nothing runs at publication time. Content is re-read from disk on every
+request with no caching, so a scheduled item becomes visible on its own the
+moment its stamp passes — no deploy, no cron, and nothing that can fail at
+the moment it matters. The practical consequence is that **merging to `main`
+and publishing are separable**: ship the code whenever, and let the stamp
+decide when readers see it.
+
+`SHOW_UNPUBLISHED=1` reveals future-dated content, for previewing locally or
+verifying a deploy before its content is due. Production leaves it unset.
+
+`site_timezone()` falls back to UTC rather than raising if the tz database is
+missing, since an exception there would take down every page that reads dated
+content — which is all of them. `tzdata` is in `requirements.txt` so the
+lookup works regardless of what the base image ships.
 
 ## Deployment
 

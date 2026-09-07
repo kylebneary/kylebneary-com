@@ -5,7 +5,7 @@ from flask import Blueprint, Flask, Response, render_template
 
 from about_me.about_me import about_bp
 from blog.blog import blog_bp, get_blog_posts
-from projects.projects import projects_bp
+from projects.projects import get_projects, projects_bp
 
 app = Flask(__name__)
 app.config["SITE_URL"] = os.environ.get("SITE_URL", "https://www.kylebneary.com").rstrip('/')
@@ -45,7 +45,8 @@ def robots():
 @app.route('/sitemap.xml')
 def sitemap():
     all_posts, _ = get_blog_posts()
-    body = render_template('sitemap.xml', posts=all_posts)
+    projects = [p for p in get_projects() if p['has_detail']]
+    body = render_template('sitemap.xml', posts=all_posts, projects=projects)
     return Response(body, mimetype="application/xml")
 
 
