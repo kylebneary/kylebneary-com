@@ -198,9 +198,8 @@ lookup works regardless of what the base image ships.
 ## Deployment
 
 - `Dockerfile` builds a `python:3.12` image, installs `requirements.txt`,
-  and runs `python main.py`.
-- Cloud Run injects `PORT`; `main.py` reads it via
-  `os.environ.get("PORT", 8080)`.
+  and serves the app with `gunicorn` (`main:app`), not Flask's dev server.
+- Cloud Run injects `PORT`; the Dockerfile binds gunicorn to it.
 - **Deploys are automatic**, via Cloud Run's built-in GitHub integration:
   the Cloud Run service is configured (in the GCP console, not as anything
   checked into this repo) to watch `main` and build+deploy on every push.
@@ -229,25 +228,17 @@ to `article` and supply their own `BlogPosting` JSON-LD).
 Tracked here rather than fixed silently, since they change app behavior and
 deserve a deliberate decision rather than a drive-by edit:
 
-1. **`Dockerfile` runs the Flask dev server, not gunicorn.** `main.py` calls
-   `app.run(debug=True, ...)`, so the container serves production traffic
-   through Werkzeug's debug server — including its interactive debugger,
-   which allows arbitrary code execution if it's ever reachable. `gunicorn`
-   is already in `requirements.txt` but unused. Fix: change the Dockerfile's
-   `CMD` to something like `gunicorn --bind 0.0.0.0:8080 main:app` and drop
-   `debug=True` (or gate it behind an env var for local dev only). Flagged
-   previously and still deliberately out of scope of the site redesign.
-2. **CD isn't gated on CI.** Cloud Run's GitHub integration deploys on every
+1. **CD isn't gated on CI.** Cloud Run's GitHub integration deploys on every
    push to `main` regardless of whether `.github/workflows/ci.yml` passed —
    the two systems don't talk to each other. The only thing standing between
    a bad push and production is branch protection on `main` (require a PR +
    passing status checks before merge — see below). Without that enabled,
    a direct push to `main` skips CI entirely and deploys anyway.
-3. **No caching layer for blog/project content** — every request re-reads
+2. **No caching layer for blog/project content** — every request re-reads
    and re-parses the relevant Markdown files from disk. Acceptable at
    current content volume; would need revisiting if either grows
    substantially.
-4. **`www` vs apex domain isn't redirected at the DNS/Cloud Run level** —
+3. **`www` vs apex domain isn't redirected at the DNS/Cloud Run level** —
    `SITE_URL` picks one canonical host for SEO purposes, but if both
    `kylebneary.com` and `www.kylebneary.com` currently resolve to the site
    without one redirecting to the other, that's a duplicate-content issue
