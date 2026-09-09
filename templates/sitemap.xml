@@ -25,6 +25,16 @@
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
+    <url>
+        <loc>{{ site_url }}{{ url_for('legal_bp.privacy') }}</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.2</priority>
+    </url>
+    <url>
+        <loc>{{ site_url }}{{ url_for('legal_bp.terms') }}</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.2</priority>
+    </url>
     {% for project in projects %}
     <url>
         <loc>{{ site_url }}{{ url_for('projects_bp.detail', slug=project.slug) }}</loc>

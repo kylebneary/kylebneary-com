@@ -31,11 +31,43 @@ def preview_client(monkeypatch):
     [
         "/", "/blog/", "/about-me/", "/projects/", "/sitemap.xml", "/robots.txt",
         "/blog/feed.xml", "/blog/artificial", "/blog/artificial/feed.xml",
+        "/legal/privacy", "/legal/terms",
     ],
 )
 def test_route_returns_ok(client, path):
     response = client.get(path)
     assert response.status_code == 200
+
+
+def test_unknown_route_renders_custom_404_page(client):
+    response = client.get("/this-page-does-not-exist")
+    assert response.status_code == 404
+    assert b"Page not found" in response.data
+
+
+def test_sitemap_includes_legal_pages(client):
+    response = client.get("/sitemap.xml")
+    assert b"/legal/privacy" in response.data
+    assert b"/legal/terms" in response.data
+
+
+def test_https_not_enforced_under_testing(client):
+    # The test client always sends plain HTTP with no X-Forwarded-Proto
+    # header; enforce_https() must not redirect it away from the page
+    # it's actually trying to test.
+    response = client.get("/")
+    assert response.status_code == 200
+
+
+def test_https_enforced_outside_testing():
+    app.config.update(TESTING=False, DEBUG=False)
+    try:
+        with app.test_client() as client:
+            response = client.get("/", base_url="http://kylebneary.com")
+            assert response.status_code == 301
+            assert response.headers["Location"].startswith("https://")
+    finally:
+        app.config.update(TESTING=True)
 
 
 def test_home_page_lists_featured_posts(client):

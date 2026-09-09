@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms and Conditions{% endblock %}
+{% block meta_description %}Terms and conditions for using kylebneary.com.{% endblock %}
+
+{% block content %}
+<section class="legal">
+    <h1>Terms and Conditions</h1>
+    <p class="post-meta">Last updated: {{ now.strftime('%B %d, %Y').replace(' 0', ' ') }}</p>
+
+    <p>This site (kylebneary.com) is a personal blog and portfolio maintained by Kyle Neary. By using it, you agree to the following:</p>
+
+    <h2>Content</h2>
+    <p>Blog posts, project write-ups, and other written content on this site reflect personal opinions and are provided for informational purposes only. They aren't professional advice of any kind, and shouldn't be relied on as such.</p>
+
+    <h2>Code samples</h2>
+    <p>Where this site links to or embeds source code (for example, the project code explorers), that code is governed by the license in its own repository, not by these terms.</p>
+
+    <h2>No warranty</h2>
+    <p>This site is provided "as is," without warranty of any kind. Content may contain mistakes or become outdated, and the site may be unavailable from time to time.</p>
+
+    <h2>External links</h2>
+    <p>This site links to third-party sites (GitHub, LinkedIn, and others). Those sites are outside this site's control, and linking to them isn't an endorsement of their content.</p>
+
+    <h2>Changes</h2>
+    <p>These terms may be updated occasionally as the site changes. Continued use of the site after an update means you accept the revised terms.</p>
+
+    <h2>Contact</h2>
+    <p>Questions can be sent to <a href="mailto:kyle.b.neary@gmail.com">kyle.b.neary@gmail.com</a>.</p>
+</section>
+{% endblock %}
