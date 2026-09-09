@@ -11,6 +11,8 @@ RUN pip install -r requirements.txt
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
+ENV PORT=8080
 
-# Run app.py when the container launches
-CMD python main.py
+# Serve with gunicorn, not Flask's dev server -- the dev server's debugger
+# allows arbitrary code execution if it's ever reachable in production.
+CMD exec gunicorn --bind 0.0.0.0:${PORT} main:app
