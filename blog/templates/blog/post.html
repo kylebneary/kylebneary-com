@@ -1,10 +1,47 @@
 {% extends "base.html" %}
 
 {% block title %}{{ title }}{% endblock %}
+{% block meta_description %}{{ summary }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_image %}{{ site_url }}{{ image or url_for('static', filename='images/headshot.jpg') }}{% endblock %}
+{% block canonical %}{{ site_url }}{{ url_for('blog_bp.post', post_name=post_name) }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ title|tojson }},
+    "description": {{ summary|tojson }},
+    "url": "{{ self.canonical() }}",
+    "datePublished": "{{ publication_date }}",
+    "author": {
+        "@type": "Person",
+        "name": "Kyle Neary"
+    }
+}
+</script>
+{% endblock %}
 
 {% block content %}
     <article class="blog">
-        <!-- {% if meta.publication_date %}<div class="post-meta">{{ meta.publication_date[0] }}</div>{% endif %} -->
+        <header>
+            {% if is_artificial %}
+            <p class="series-strip">
+                <span class="badge-artificial">Artificial</span>
+                Part of the <a href="{{ url_for('blog_bp.artificial_index') }}">Artificial series</a>
+            </p>
+            {% endif %}
+            <h1>{{ title }}</h1>
+            <p class="post-meta">
+                {% if display_date %}{{ display_date }} · {% endif %}{{ reading_time }} min read
+            </p>
+            {% if tags %}
+            <ul class="tag-list">
+                {% for tag in tags %}<li>{{ tag }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+        </header>
         {{ post_content|safe }}
     </article>
 {% endblock %}

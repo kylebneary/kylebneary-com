@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Artificial{% endblock %}
+{% block meta_description %}Artificial: a series within this blog on AI ethics in both directions — how AI should treat us, and how we should treat it.{% endblock %}
+{% block canonical %}{{ site_url }}{{ url_for('blog_bp.artificial_index') }}{% endblock %}
+
+{% block extra_head %}
+<link rel="alternate" type="application/rss+xml" title="Kyle B. Neary — Artificial" href="{{ url_for('blog_bp.artificial_feed') }}">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Artificial",
+    "description": "AI ethics in both directions — how AI should treat us, and how we should treat it.",
+    "url": "{{ self.canonical() }}",
+    "isPartOf": {
+        "@type": "Blog",
+        "name": "Kyle B. Neary — Blog",
+        "url": "{{ site_url }}{{ url_for('blog_bp.index') }}"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+    <section class="intro">
+        <h1>Artificial</h1>
+        <p>AI ethics in both directions — not just how AI should treat us, but how we should treat&nbsp;it.</p>
+        <p class="post-meta"><a href="{{ url_for('blog_bp.artificial_feed') }}">Subscribe via RSS</a> &nbsp;&middot;&nbsp; <a href="{{ url_for('blog_bp.post', post_name='about-the-premise') }}">Read the premise &rarr;</a></p>
+        <p class="post-meta"><a href="{{ url_for('blog_bp.index') }}">&larr; All blog posts</a></p>
+    </section>
+
+    <section class="blog-directory">
+        <h2>All Artificial Posts</h2>
+        {% if posts %}
+            {% set show_badge = false %}
+            {% include 'blog/_post_list.html' %}
+        {% else %}
+        <p>No posts yet — the first one is coming soon.</p>
+        {% endif %}
+    </section>
+{% endblock %}

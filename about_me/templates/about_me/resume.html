@@ -1,11 +1,37 @@
 {% extends 'base.html' %}
 
 {% block title %}About Me{% endblock %}
+{% block meta_description %}Resume of Kyle Neary — data science and analytics leader with experience at Nvidia, Great Wolf Resorts, and Intel.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kyle Neary",
+    "url": "{{ self.canonical() }}",
+    "jobTitle": "Data Scientist",
+    "alumniOf": [
+        {"@type": "CollegeOrUniversity", "name": "University of Minnesota"},
+        {"@type": "CollegeOrUniversity", "name": "University of Notre Dame"}
+    ],
+    "sameAs": [
+        "https://www.linkedin.com/in/kylebneary/",
+        "https://github.com/kylebneary"
+    ]
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <section class="resume">
-    <h1>Kyle Neary</h1>
-    <h2>Data Science & Analytics Leader</h2>
+    <div class="resume-header">
+        <img class="resume-photo" src="{{ url_for('static', filename='images/headshot.jpg') }}" alt="Kyle Neary" width="84" height="84">
+        <div>
+            <h1>Kyle Neary, Ph.D.</h1>
+            <p class="role">Data Science &amp; Analytics Leader</p>
+        </div>
+    </div>
     <p>Email: <a href="mailto:kyle.b.neary@gmail.com">kyle.b.neary@gmail.com</a> | <a href="https://www.linkedin.com/in/kylebneary/" target="_blank">LinkedIn</a> | <a href="https://github.com/kylebneary" target="_blank">GitHub</a></p>
     <p>Location: Madison, WI</p>
 
@@ -81,6 +107,5 @@
         <h3>Bachelor of Science in Physics</h3>
         <p><strong>University of Notre Dame</strong> | Notre Dame, IN</p>
     </section>
-
 </section>
 {% endblock %}
