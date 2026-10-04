@@ -17,7 +17,7 @@ Before diving into the current version of the site, it’s important to reflect 
 
 While side navigation worked well for the earlier version, it didn’t feel as fluid or dynamic as I wanted for the final site. The decision to switch to **top navigation** was driven by my desire to make the design more intuitive and visually appealing for a larger variety of users. With top navigation, the website layout would feel more open, with content taking up more of the screen space.
 
-![Insert Screenshot of Previous Side Navigation Design Here](images/building_a_site_initial_design.png)
+![Screenshot of the site's earlier design, with a dark left sidebar holding a profile photo and nav links, and a two-card "Featured Posts" grid on the right](images/building_a_site_initial_design.png)
 
 ---
 
@@ -77,7 +77,7 @@ While I’m happy with the initial design, I’ve decided that the version I’v
 
 I will be refining the final design to create something more visually sophisticated. This will involve **enhancing the visual hierarchy**, tweaking the color scheme, and adding more interactive features, such as personalized content recommendations based on user preferences. Additionally, I plan to integrate some new AI-driven features, like interactive data visualizations for blog posts or projects.
 
-![Insert Screenshot of the Final Design Here (when ready)](images/building_a_site_final_design.png)
+![Screenshot of the redesigned site with a horizontal top navbar and a three-card "Featured Posts" grid](images/building_a_site_final_design.png)
 
 ---
 

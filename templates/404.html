@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Page Not Found{% endblock %}
+{% block meta_description %}This page doesn't exist on kylebneary.com.{% endblock %}
+
+{% block content %}
+<section class="not-found">
+    <h1>Page not found</h1>
+    <p class="hero-lede">There's nothing at this address. It may have moved, or the link might just be wrong.</p>
+    <div class="hero-links">
+        <a class="primary" href="{{ url_for('home_bp.index') }}">Back to home &rarr;</a>
+        <a class="secondary" href="{{ url_for('blog_bp.index') }}">Read the blog</a>
+        <a class="secondary" href="{{ url_for('projects_bp.index') }}">See projects</a>
+    </div>
+</section>
+{% endblock %}

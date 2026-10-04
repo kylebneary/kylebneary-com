@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy{% endblock %}
+{% block meta_description %}Privacy policy for kylebneary.com: what data this site collects (very little) and why.{% endblock %}
+
+{% block content %}
+<section class="legal">
+    <h1>Privacy Policy</h1>
+    <p class="post-meta">Last updated: {{ now.strftime('%B %d, %Y').replace(' 0', ' ') }}</p>
+
+    <p>This site is a personal blog and portfolio. It doesn't have user accounts, doesn't run ads, and doesn't sell or share data with anyone, because it doesn't collect meaningful data to begin with. Here's the full picture:</p>
+
+    <h2>What this site collects</h2>
+    <p>Nothing, directly. There are no sign-ups, no contact forms, and no cookies set by this site.</p>
+
+    <h2>What the hosting infrastructure sees</h2>
+    <p>Like any website, requests to this site pass through standard web server logging on its hosting provider (Google Cloud Run). That means routine technical data — IP address, requested URL, timestamp, user agent — is logged briefly for operating and securing the service, the same as almost every website on the internet. This isn't used for tracking or shared with third parties.</p>
+
+    <h2>Links to other sites</h2>
+    <p>This site links out to GitHub, LinkedIn, and other external sites. Those sites have their own privacy policies, which this policy doesn't cover.</p>
+
+    <h2>Cookies</h2>
+    <p>This site does not set cookies or use any tracking or analytics tooling today. If that changes in the future (for example, adding privacy-friendly analytics), this policy will be updated first, and a consent banner will be added if the tool in question requires one.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy can be sent to <a href="mailto:kyle.b.neary@gmail.com">kyle.b.neary@gmail.com</a>.</p>
+</section>
+{% endblock %}
