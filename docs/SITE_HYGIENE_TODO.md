@@ -4,7 +4,7 @@ Source: an Instagram post listing 20 pre-launch website checks. This file
 tracks what was done, what doesn't apply to this site, and what's left for
 Kyle to decide or do outside this repo.
 
-## Done (this branch)
+## Done
 
 1. **Privacy policy** — `/legal/privacy`, honest version: no accounts, no
    forms, no cookies today; notes standard Cloud Run request logging.
@@ -30,6 +30,16 @@ Kyle to decide or do outside this repo.
 10. **Alt text on images** — the one real `<img>` tag already had alt text;
     fixed two blog-post images that had leftover placeholder alt text
     ("Insert Screenshot ... Here") with real descriptions.
+11. **Compress images** — compressed all three oversized assets with no
+    visible quality loss:
+    - `static/images/favicon.ico`: 204 KB → **8 KB** (re-exported as a
+      proper multi-resolution `.ico` at 16/32/48/64px, instead of one
+      256×256 frame).
+    - `blog/static/images/building_a_site_initial_design.png`: 271 KB →
+      **95 KB** (256-color palette quantization — these are UI screenshots
+      with mostly flat color, so palette reduction is lossless-looking).
+    - `blog/static/images/building_a_site_final_design.png`: 254 KB →
+      **87 KB**, same treatment.
 13. **Color contrast** — audited every text/background color pair in
     `styles.css` against WCAG. All pass AA (most pass AAA, 6.4:1–17:1).
     No changes needed.
@@ -57,28 +67,13 @@ Kyle to decide or do outside this repo.
 
 ## Needs a decision or an external account
 
-- **11. Compress images** — no image tooling (Pillow, pngquant, etc.) was
-  reachable from this environment (no network access to install it). Worth
-  doing by hand:
-  - `static/images/favicon.ico` is **204 KB** — that's enormous for a
-    favicon (typically <15 KB). Re-export as a small multi-resolution
-    `.ico`, or switch to a 32×32/180×180 PNG set (favicon + apple-touch-icon).
-  - `blog/static/images/building_a_site_initial_design.png` (197 KB) and
-    `building_a_site_final_design.png` (197 KB) are full-page screenshots —
-    run them through any PNG optimizer (tinypng.com, `pngquant`, `oxipng`)
-    to knock them down, likely to well under 100 KB each with no visible
-    quality loss.
 - **12. Page load speed** — couldn't run Lighthouse/PageSpeed Insights from
-  this environment (needs a headless browser). Once this branch is deployed,
-  run https://pagespeed.web.dev against the live URL. One likely finding
-  going in: **`Dockerfile` currently runs Flask's dev server
-  (`app.run(debug=True)`), not gunicorn**, which is a real production
-  bottleneck (and, worse, a security hole — the interactive debugger allows
-  arbitrary code execution if it's ever reachable). This was already flagged
-  in `docs/ARCHITECTURE.md` as a deliberately-deferred known gap. `gunicorn`
-  is already in `requirements.txt` unused. Worth fixing regardless of the
-  Instagram checklist — happy to do it, just didn't want to change the
-  Dockerfile/prod startup command without confirmation first.
+  this environment (needs a headless browser). Once this is deployed, run
+  https://pagespeed.web.dev against the live URL. Note: the Dockerfile
+  previously ran Flask's dev server instead of gunicorn in production (a
+  real perf bottleneck and a security hole); that's already fixed and
+  merged (see `docs/ARCHITECTURE.md`), so a fresh Lighthouse run should
+  reflect gunicorn + the now-compressed images above.
 - **19. Set up analytics** — needs Kyle to create an account somewhere;
   can't be done from here. Recommend a **cookie-free** option (Plausible,
   Fathom, GoatCounter, or Cloudflare Web Analytics) specifically so #5 stays
