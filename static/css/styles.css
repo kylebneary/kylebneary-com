@@ -624,7 +624,8 @@ footer a:hover { color: var(--accent); }
 /* ========== Project detail: sticky table of contents ========== */
 /* The site header is sticky and ~60px tall; anchored headings and the
    sticky TOC both have to clear it. */
-:root { --header-h: 60px; }
+:root { --header-h: 80px; }
+@media (min-width: 720px) { :root { --header-h: 60px; } }
 
 .project-layout {
     display: grid;
@@ -679,7 +680,7 @@ footer a:hover { color: var(--accent); }
 .page-toc > .toc > ul > li > a { color: var(--ink); font-weight: 700; }
 
 /* Without this, clicking a TOC link parks the heading under the sticky header. */
-.blog h2[id], .blog h3[id] { scroll-margin-top: calc(var(--header-h) + var(--space-3)); }
+.blog h2[id], .blog h3[id], .blog a[id] { scroll-margin-top: calc(var(--header-h) + var(--space-3)); }
 
 /* ========== Architecture diagrams ========== */
 .diagram {
