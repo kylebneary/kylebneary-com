@@ -2,7 +2,7 @@
 title: Attention Is the Bottleneck Now
 author: Kyle Neary
 summary: Writing used to require reading. Now generation is nearly free and the cost has moved downstream to the reader, which makes human attention and understanding the new bottleneck, and productivity the wrong metric.
-publication_date: 2026-10-25
+publication_date: 2026-10-27 09:50
 tags: artificial, ai-ethics
 ---
 
