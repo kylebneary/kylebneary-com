@@ -866,6 +866,39 @@ footer a:hover { color: var(--accent); }
     }
 }
 
+/* ========== Inline glossary terms ========== */
+a.term {
+    position: relative;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+}
+a.term::after {
+    content: attr(data-definition);
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 0.4rem);
+    width: max-content;
+    max-width: min(20rem, 80vw);
+    padding: var(--space-2) var(--space-3);
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-decoration: none;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s;
+    pointer-events: none;
+    z-index: 10;
+}
+a.term:hover::after,
+a.term:focus-visible::after {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* ========== Motion & print ========== */
 @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
