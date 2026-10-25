@@ -624,7 +624,8 @@ footer a:hover { color: var(--accent); }
 /* ========== Project detail: sticky table of contents ========== */
 /* The site header is sticky and ~60px tall; anchored headings and the
    sticky TOC both have to clear it. */
-:root { --header-h: 60px; }
+:root { --header-h: 80px; }
+@media (min-width: 720px) { :root { --header-h: 60px; } }
 
 .project-layout {
     display: grid;
@@ -679,7 +680,7 @@ footer a:hover { color: var(--accent); }
 .page-toc > .toc > ul > li > a { color: var(--ink); font-weight: 700; }
 
 /* Without this, clicking a TOC link parks the heading under the sticky header. */
-.blog h2[id], .blog h3[id] { scroll-margin-top: calc(var(--header-h) + var(--space-3)); }
+.blog h2[id], .blog h3[id], .blog a[id] { scroll-margin-top: calc(var(--header-h) + var(--space-3)); }
 
 /* ========== Architecture diagrams ========== */
 .diagram {
@@ -863,6 +864,71 @@ footer a:hover { color: var(--accent); }
         border-right: 1px solid var(--rule);
         padding-right: var(--space-3);
         padding-bottom: 0;
+    }
+}
+
+/* ========== Inline glossary terms ========== */
+/* The tip is a real child element (not a pseudo-element) so it can hold a
+   link, and it opens on :focus-within so a tap on touch screens works too. */
+.term {
+    position: relative;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+    cursor: help;
+}
+.term-tip {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    width: max-content;
+    max-width: min(20rem, 80vw);
+    /* transparent top padding bridges the gap so the pointer can reach the link */
+    padding-bottom: 0.4rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s;
+    z-index: 10;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    font-style: normal;
+    font-weight: 400;
+    text-decoration: none;
+    cursor: auto;
+}
+.term-tip > span {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 4px;
+}
+.term-tip a {
+    display: block;
+    margin-top: var(--space-1);
+    color: var(--bg);
+    font-weight: 600;
+    text-decoration: underline;
+}
+.term:hover .term-tip,
+.term:focus-within .term-tip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* On narrow screens a tip anchored to the word would run off the edge, so
+   show it as a card pinned to the bottom of the viewport instead. */
+@media (max-width: 600px) {
+    .term { position: static; }
+    .term-tip {
+        position: fixed;
+        left: var(--space-3);
+        right: var(--space-3);
+        bottom: var(--space-3);
+        width: auto;
+        max-width: none;
+        padding-bottom: 0;
+        font-size: 0.95rem;
     }
 }
 
