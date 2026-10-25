@@ -24,11 +24,15 @@ This isn't a complete AI dictionary — just plain-language definitions for the 
 
 **Training / training data** — The process (and the data) by which a machine learning model learns its patterns. A model is "trained" on a large collection of examples — text, images, past decisions — and adjusts itself to get better at predicting or generating things like them. This matters ethically because a model trained on biased or incomplete data will tend to reproduce that bias, even without anyone intending it to.
 
+<a id="model-collapse"></a>**Model collapse** — The gradual degradation that can happen when models are trained on content that earlier models generated, rather than on human-made material. Each generation learns from a slightly distorted copy of the last, so rare details and variety wash out and errors compound. It's a concern as AI-generated text becomes a bigger share of what's online.
+
 **Deep learning** — A subfield of machine learning that uses layered structures called neural networks (loosely inspired by how neurons connect in a brain) to find patterns in large, messy data — images, audio, raw text — that are hard to hand-describe with simple rules. Most of the recent, headline-making AI progress, including large language models, is built on deep learning.
 
 **Natural language processing (NLP)** — The subfield of AI focused specifically on human language: understanding it, generating it, translating it, summarizing it. Chatbots, translation tools, and language models are all NLP applications.
 
 **Large language model (LLM)** — A deep learning model trained on huge amounts of text, built to predict and generate language. ChatGPT, Claude, and similar tools are LLMs. They're the reason "AI" has come to mean "a thing you can chat with" for a lot of people, even though language models are just one branch of the broader field.
+
+<a id="hallucination"></a>**Hallucination** — When a language model produces something that sounds confident and plausible but is false or made up: a citation that doesn't exist, a fact that was never true. It isn't lying, since the model has no intent; it's generating likely-sounding text, and likely-sounding isn't the same as correct.
 
 **Forecasting** — A machine learning application focused on predicting future values from past data — demand forecasting, weather prediction, that kind of thing. Less flashy than language or image generation, but one of the oldest and most widely used applications of ML.
 
@@ -37,6 +41,8 @@ This isn't a complete AI dictionary — just plain-language definitions for the 
 **Bias (algorithmic bias)** — A systematic pattern where a model treats some people or groups differently than others, often because the data it learned from reflected historical inequities. "Accurate" (matches the historical data) and "fair" can pull apart here — a model can faithfully reproduce a biased pattern and still be doing real harm.
 
 **Deployment** — The point at which a model moves from being built and tested to actually being used in the real world — approving loans, screening resumes, driving a car. A lot of AI ethics problems live specifically in deployment: a model can be technically sound and still cause harm because of how, where, or on whom it's used.
+
+<a id="human-in-the-loop"></a>**Human in the loop** — A design where a person reviews, approves, or can override an AI system's output before it takes effect, rather than the system acting on its own. It's meant to keep someone accountable, but it only works if the person actually has the time and understanding to evaluate what they're approving.
 
 **Transparency (explainability)** — How well people can understand *why* a model produced a particular output. Some models are simple enough to explain step by step; others (especially deep learning models) are effectively black boxes even to the people who built them, which makes it hard to check their reasoning or catch mistakes.
 

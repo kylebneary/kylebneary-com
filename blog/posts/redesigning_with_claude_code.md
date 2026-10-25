@@ -44,7 +44,7 @@ That loop — propose a few real options, compare them visually, commit to one, 
 
 The part worth being specific about: this was maybe an hour of my actual attention, spread across a handful of short check-ins — approve a plan, react to three mockups, point out a broken menu, pick a color. The actual implementation, testing, and verification happened in the gaps between those messages. Compare that to the original build, which was "under a day" of fairly continuous work. This wasn't a bigger scope done faster so much as the same kind of scope with most of the mechanical work — writing the CSS, wiring up the Markdown parsing, running the linter and test suite, checking every route actually returns 200 — happening without me watching it happen.
 
-The trade-off is that I was reviewing outcomes rather than typing code, which meant catching the mobile nav regression only after actually looking at it, not because I read the CSS and spotted the bug. Interactive-but-asynchronous is a different way of building than either "do it all myself" or "one long AI-generated blob I review at the end," and it's the one I'd reach for again.
+The trade-off is that I was reviewing outcomes rather than typing code, which meant catching the mobile nav regression only after actually looking at it, not because I read the CSS and spotted the bug. Interactive-but-asynchronous is a different way of building than either "do it all myself" or "one long AI-generated blob I review at the end," and it's the one I'd reach for again. (It also raises a question I only half-answered here about what it means to sign off on work you didn't read; I came back to it in [Attention Is the Bottleneck Now](/blog/attention-is-the-bottleneck-now).)
 
 ---
 
