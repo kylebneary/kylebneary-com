@@ -13,7 +13,7 @@ and a **binder designer** that auto-arranges your collection into themed spreads
 print-ready inserts. It's local-first on purpose — your collection and its value live in a SQLite
 file on your machine, not in someone else's database.
 
-## Try the binder designer, live
+## Try it live
 
 The [live demo](/static/binder-builder-demo/index.html) is the real frontend — same React
 components, same drag-and-drop grid, same auto-layout and Michi scoring code — running entirely
@@ -22,9 +22,17 @@ card, clicking **Auto-layout**, or running **Michi** all execute for real, in Ja
 tab. It opens as its own page rather than an iframe on this one, because a drag-and-drop pocket
 grid wants real width, not a box squeezed into an article column.
 
-Two things are honestly disabled rather than faked: PDF and PNG export, which need the real
-backend's rendering pipeline, show an explanatory message instead of a download. Everything else
-— the part that's actually interesting to try — works.
+The binder designer is the one fully interactive page. Around it is a read-only tour of the rest
+of the app against that same fixture — browse the seeded set, look at a few example goals
+(including a Grand Master Set goal and a hand-picked custom one), and check the portfolio
+dashboard — so the demo shows what the app actually looks like day to day, not just its one
+flashiest screen. Creating or editing a goal, searching the card catalogue, and bulk-entering a
+collection all need endpoints this static demo doesn't mock, so those stay real-app-only; the
+nav only links to what's actually there.
+
+Two things on the designer itself are honestly disabled rather than faked: PDF and PNG export,
+which need the real backend's rendering pipeline, show an explanatory message instead of a
+download. Everything else — the part that's actually interesting to try — works.
 
 ## The optimizer: a Monte Carlo engine, not a point estimate
 
@@ -157,9 +165,10 @@ Phase 4 has also landed — **custom goals**. A goal used to mean "a full set" o
 now it can mean exactly the cards you pick, nothing more. A new card-search view lets you filter
 across the catalogue and save the results as a goal directly, and a **Grand Master Set** goal
 type extends "complete the set" to cover special printings — stamped promos, 1st Edition,
-Shadowless — that a plain master set ignores. None of that is in the embedded demo above (it
-would need its own mocked search and goal endpoints to fake convincingly), but it's live in the
-real app today. More on what that actually changes day-to-day is in
+Shadowless — that a plain master set ignores. The demo above now shows a Grand Master Set goal
+and a hand-picked custom one against the seeded fixture, so you can see what either looks like;
+building one yourself still needs card search and goal-creation endpoints the demo doesn't mock,
+and that's live-app-only for now. More on what that actually changes day-to-day is in
 [the write-up](/blog/binder-builder-custom-goals).
 
 Next up is admin data-correction tooling — fixing the inevitable mis-tagged card or wrong price

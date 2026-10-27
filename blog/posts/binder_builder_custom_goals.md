@@ -54,11 +54,14 @@ that.
 
 ## What's not in the live demo
 
-The [project page's live demo](/projects/binder-builder) is still scoped to the binder designer
-against a small seeded fixture — no backend, running entirely in your browser. Card search and
-custom goals aren't in it; faking those convincingly needs their own mocked search and goal
-endpoints, and that felt like a bigger lift than this update warranted. They're live in the real
-app today, just not in the sandboxed version you can click around without installing anything.
+The [project page's live demo](/projects/binder-builder) now goes beyond just the binder
+designer — it's a read-only tour of sets, a few example goals, and the portfolio dashboard, all
+against the same small seeded fixture, no backend, running entirely in your browser. You can open
+a Grand Master Set goal and a hand-picked custom one there and see exactly what they look like.
+What's still missing is *building* one: card search and goal creation/editing need their own
+mocked endpoints, and faking those convincingly felt like a bigger lift than this update
+warranted. They're live in the real app today, just not in the sandboxed version you can click
+around without installing anything.
 
 ## What's next
 
