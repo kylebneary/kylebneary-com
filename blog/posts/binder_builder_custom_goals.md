@@ -2,7 +2,7 @@
 title: Binder Builder Gets Custom Goals
 author: Kyle Neary
 summary: The latest phase of Binder Builder lets you build a collection goal out of exactly the cards you want, not just "a set" or "a master set" — plus a new card-search view and a Grand Master Set goal type for special printings.
-publication_date: 2026-11-03 09:50
+publication_date: 2026-10-26 09:50
 tags: binder-builder, pokemon-tcg, side-projects
 ---
 
