@@ -6,8 +6,6 @@ publication_date: 2026-11-03 09:50
 tags: binder-builder, pokemon-tcg, side-projects
 ---
 
-# Binder Builder Gets Custom Goals
-
 [Binder Builder](/projects/binder-builder) is the local-first Pokémon TCG toolkit I've been
 building — a tracker for what you own, an optimizer that Monte-Carlos the cheapest way to finish
 a set, and a binder designer that auto-arranges your collection into themed spreads. The project
