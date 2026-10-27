@@ -20,7 +20,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the pieces fit togeth
 
 ## Local development
 
-Requires Python 3.12+.
+Requires Python 3.13+.
 
 ```bash
 python -m venv .venv

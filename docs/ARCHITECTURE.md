@@ -197,7 +197,7 @@ lookup works regardless of what the base image ships.
 
 ## Deployment
 
-- `Dockerfile` builds a `python:3.12` image, installs `requirements.txt`,
+- `Dockerfile` builds a `python:3.13` image, installs `requirements.txt`,
   and serves the app with `gunicorn` (`main:app`), not Flask's dev server.
 - Cloud Run injects `PORT`; the Dockerfile binds gunicorn to it.
 - **Deploys are automatic**, via Cloud Run's built-in GitHub integration:
